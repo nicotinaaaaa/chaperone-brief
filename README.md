@@ -42,8 +42,8 @@ first, which converts it to a draft markdown stub in `inbox/` (installing
 copy-pasteable template for each content type, every ingest script flag
 (`--slug`, `--docx`, `--figures`), and the figure/table caption convention.
 
-Once `scripts/publish.sh` exists (a later phase), it wraps this: ingest →
-build → commit → push, and is what a scheduled task runs non-interactively.
+`scripts/publish.sh` wraps this for non-interactive use — see
+[Deployment](#deployment) below.
 
 ## Feeds and SEO
 
@@ -86,7 +86,7 @@ src/
   pages/
   styles/
 scripts/
-  new-brief.mjs new-review.mjs docx-to-md.mjs
+  new-brief.mjs new-review.mjs docx-to-md.mjs publish.sh
   lib/ingest-helpers.mjs
 inbox/                 # staging area for raw content — see inbox/README.md
 .github/workflows/     # CI: astro check + npm run build on every PR and push to main
@@ -122,5 +122,20 @@ deliberate decision, not a surprise.
   push to `main`, independently of Netlify's own build. A PR with a broken
   brief or a schema violation fails CI before it can be merged, not after
   it's already live.
-- `scripts/publish.sh` — the non-interactive ingest → build → commit → push
-  wrapper a scheduled task runs — doesn't exist yet; a later phase.
+- **`scripts/publish.sh`** — the non-interactive wrapper a scheduled task
+  runs: ingest → build → commit → push, stopping (non-zero exit, nothing
+  left half-done) at the first stage that fails.
+
+  ```bash
+  scripts/publish.sh brief  inbox/science-brief-2026-09-27.md [--force]
+  scripts/publish.sh review inbox/some-review.md [--slug x] [--docx y] [--figures z] [--force]
+  ```
+
+  Refuses to run at all if the working tree isn't clean, the current branch
+  isn't `main`, or `main` isn't in sync with `origin/main` — a scheduled task
+  has no one watching to resolve that kind of ambiguity, so it isn't guessed
+  at. If ingest fails, nothing is committed. If the build fails *after* a
+  successful ingest, the newly-ingested file(s) are rolled back before
+  exiting, so a broken build never leaves stray uncommitted changes behind
+  for the next run. If `git push` itself fails (e.g. a network blip), the
+  commit has already succeeded locally — push it manually once resolved.

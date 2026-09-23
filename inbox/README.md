@@ -23,7 +23,14 @@ reference lists, missing headings) before it's ready for `new-review.mjs`:
 node scripts/docx-to-md.mjs inbox/some-review.docx
 ```
 
-This is also where `./scripts/publish.sh` expects to find the file it's given.
+This is also where `./scripts/publish.sh` expects to find the file it's
+given — it wraps the ingest step above with build → commit → push, for
+non-interactive use by a scheduled task:
+
+```bash
+scripts/publish.sh brief inbox/science-brief-2026-09-27.md
+scripts/publish.sh review inbox/some-review.md
+```
 
 Nothing in this directory is published as-is or committed — everything except
 this README is gitignored. The ingest scripts read from here and write the

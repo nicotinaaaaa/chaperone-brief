@@ -221,5 +221,14 @@ Writes only into `inbox/` — never touches `public/figures/` and never
 auto-publishes. Review the stub, fill in the TODOs, restructure headings if
 needed, then run `new-review.mjs` as usual.
 
-`scripts/publish.sh` (once it exists) wraps this: ingest → build → commit →
-push, and is what a scheduled task runs non-interactively.
+### Publishing non-interactively
+
+```bash
+scripts/publish.sh brief  inbox/science-brief-2026-09-27.md [--force]
+scripts/publish.sh review inbox/some-review.md [--slug x] [--docx y] [--figures z] [--force]
+```
+
+`scripts/publish.sh` wraps the ingest step above with build → commit → push,
+and is what a scheduled task runs non-interactively — see
+[README.md's Deployment section](README.md#deployment) for exactly what it
+checks before running and how it fails.
