@@ -7,10 +7,13 @@ import ThemeToggle from '../components/ThemeToggle.astro';
 interface Props {
 	title?: string;
 	description?: string;
+	type?: 'website' | 'article';
 }
 
-const { title, description = SITE_DESCRIPTION } = Astro.props;
+const { title, description = SITE_DESCRIPTION, type = 'website' } = Astro.props;
 const pageTitle = title ? `${title} — ${SITE_TITLE}` : SITE_TITLE;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL('/og-image.png', Astro.site);
 ---
 
 <!doctype html>
@@ -35,6 +38,20 @@ const pageTitle = title ? `${title} — ${SITE_TITLE}` : SITE_TITLE;
 		<meta name="generator" content={Astro.generator} />
 		<title>{pageTitle}</title>
 		<meta name="description" content={description} />
+		<link rel="canonical" href={canonicalURL} />
+		<link rel="alternate" type="application/rss+xml" title={`${SITE_TITLE} — RSS`} href="/rss.xml" />
+
+		<meta property="og:type" content={type} />
+		<meta property="og:site_name" content={SITE_TITLE} />
+		<meta property="og:title" content={pageTitle} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:image" content={ogImageURL} />
+
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={pageTitle} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={ogImageURL} />
 	</head>
 	<body>
 		<Header>

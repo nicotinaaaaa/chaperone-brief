@@ -19,7 +19,7 @@ const { title, date, summary, link, source, tags } = entry.data;
 const dateFmt = new Intl.DateTimeFormat('en-US', { dateStyle: 'long' });
 ---
 
-<BaseLayout title={title} description={summary}>
+<BaseLayout title={title} description={summary} type="article">
 	<article class="max-w-[68ch]">
 		<p class="font-sans text-sm" style="color: var(--color-text-muted);">
 			<time datetime={date.toISOString()}>{dateFmt.format(date)}</time> · {source}

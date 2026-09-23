@@ -24,7 +24,7 @@ const hasToc = headings.filter((h) => h.depth === 2).length >= 2;
 const dateFmt = new Intl.DateTimeFormat('en-US', { dateStyle: 'long' });
 ---
 
-<BaseLayout title={title} description={summary}>
+<BaseLayout title={title} description={summary} type="article">
 	<div class:list={['lg:gap-10', hasToc && 'lg:grid lg:grid-cols-[200px_1fr]']}>
 		{hasToc && <TableOfContents headings={headings} />}
 		<article data-toc-source>
