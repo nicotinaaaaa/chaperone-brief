@@ -18,12 +18,13 @@ const {
 	force,
 	slug: slugFlag,
 	docx: docxFlag,
+	figures: figuresFlag,
 	inputPath,
-} = parseArgs(process.argv.slice(2), ['slug', 'docx']);
+} = parseArgs(process.argv.slice(2), ['slug', 'docx', 'figures']);
 
 if (!inputPath) {
 	fail(
-		'Usage: node scripts/new-review.mjs <path-to-markdown> [--slug custom-slug] [--docx <path-to-.docx>] [--force]',
+		'Usage: node scripts/new-review.mjs <path-to-markdown> [--slug custom-slug] [--docx <path-to-.docx>] [--figures <dir>] [--force]',
 	);
 }
 
@@ -37,6 +38,14 @@ if (docxFlag) {
 	resolvedDocx = path.resolve(docxFlag);
 	if (!fs.existsSync(resolvedDocx)) {
 		fail(`--docx file not found: ${resolvedDocx}`);
+	}
+}
+
+let resolvedFigures;
+if (figuresFlag) {
+	resolvedFigures = path.resolve(figuresFlag);
+	if (!fs.existsSync(resolvedFigures) || !fs.statSync(resolvedFigures).isDirectory()) {
+		fail(`--figures directory not found: ${resolvedFigures}`);
 	}
 }
 
@@ -80,8 +89,8 @@ if (!data.readingTime) {
 	guesses.push(`readingTime ← computed from word count (${words} words): ${minutes} min`);
 }
 
-// Computed before validation (from the pre-parse title) so a --docx path can
-// reference the final filename as part of the data that gets validated.
+// Computed before validation (from the pre-parse title) so --docx/--figures
+// paths can reference the final slug as part of the data that gets validated.
 const slug =
 	slugFlag ??
 	(data.title ? slugify(data.title) : undefined) ??
@@ -93,6 +102,28 @@ if (!slug) {
 
 if (resolvedDocx) {
 	data.docxPath = `/downloads/${slug}.docx`;
+}
+
+// Rewrite relative image paths to where they'll actually be served from, and
+// fail if the markdown references a figure that --figures didn't provide.
+let finalBody = body;
+if (resolvedFigures) {
+	const missing = [];
+	finalBody = body.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, src) => {
+		if (/^([a-z]+:)?\/\//i.test(src) || src.startsWith('/')) {
+			return match; // external or already absolute — leave untouched
+		}
+		if (!fs.existsSync(path.join(resolvedFigures, src))) {
+			missing.push(src);
+			return match;
+		}
+		return `![${alt}](/figures/${slug}/${src})`;
+	});
+	if (missing.length > 0) {
+		fail(
+			`--figures was given (${resolvedFigures}), but the markdown references image(s) not found there: ${missing.join(', ')}`,
+		);
+	}
 }
 
 const result = reviewsSchema.safeParse(data);
@@ -114,22 +145,37 @@ if (docxDestPath && fs.existsSync(docxDestPath) && !force) {
 	fail(`${docxDestPath} already exists. Re-run with --force to overwrite.`);
 }
 
+const figuresDestDir = resolvedFigures ? path.resolve('public/figures', slug) : undefined;
+if (figuresDestDir && fs.existsSync(figuresDestDir) && !force) {
+	fail(`${figuresDestDir} already exists. Re-run with --force to overwrite.`);
+}
+
 const outputData = {
 	...result.data,
 	date: toDateOnly(result.data.date),
 };
 
 fs.mkdirSync(destDir, { recursive: true });
-fs.writeFileSync(destPath, matter.stringify(body, outputData));
+fs.writeFileSync(destPath, matter.stringify(finalBody, outputData));
 
 if (resolvedDocx && docxDestPath) {
 	fs.mkdirSync(downloadsDir, { recursive: true });
 	fs.copyFileSync(resolvedDocx, docxDestPath);
 }
 
+if (resolvedFigures && figuresDestDir) {
+	fs.mkdirSync(figuresDestDir, { recursive: true });
+	fs.cpSync(resolvedFigures, figuresDestDir, { recursive: true, force: true });
+}
+
 console.log(`✓ Wrote ${path.relative(process.cwd(), destPath)}`);
 if (docxDestPath) {
 	console.log(`✓ Copied .docx to ${path.relative(process.cwd(), docxDestPath)} (docxPath: ${outputData.docxPath})`);
+}
+if (figuresDestDir) {
+	console.log(
+		`✓ Copied figures to ${path.relative(process.cwd(), figuresDestDir)} and rewrote their image paths in the body`,
+	);
 }
 if (guesses.length > 0) {
 	console.log('Guessed:');

@@ -3,8 +3,8 @@ title: Placeholder Review — Delete Me — Regulatory T cells in tumour immune 
 date: '2026-09-21'
 summary: >-
   Placeholder content seeded to exercise the review template — references, a
-  downloadable .docx, and figure/table captions — before the first real review
-  is published.
+  downloadable .docx, figures, and captions — before the first real review is
+  published.
 tags:
   - immunology
   - oncology
@@ -33,9 +33,9 @@ draft: false
 
 Regulatory T cells (Tregs) are a subset of CD4+ T cells that suppress immune responses.
 
-![A diagram of Treg-mediated suppression in the tumour microenvironment](/images/placeholder.png)
+![A diagram of Treg-mediated suppression in the tumour microenvironment](/figures/placeholder-review/treg-diagram.png)
 
-*Figure 1: Tregs suppress effector T cell activity via CTLA-4 and IL-2 sequestration. Source: adapted from Chen et al., 2025.*
+**Figure 1.** Tregs suppress effector T cell activity via CTLA-4 engagement and IL-2 sequestration, shown across three tumour models. Source: adapted from Chen et al. (2025), *Nature Reviews Immunology*, CC BY 4.0.
 
 ## Mechanism
 
@@ -44,7 +44,7 @@ Regulatory T cells (Tregs) are a subset of CD4+ T cells that suppress immune res
 | CTLA-4 engagement | Reduces costimulation | Basis for anti-CTLA-4 therapy |
 | IL-2 sequestration | Starves effector T cells | Motivates low-dose IL-2 trials |
 
-*Table 1: Major Treg suppression mechanisms and their therapeutic relevance.*
+**Table 1.** Major Treg suppression mechanisms and their therapeutic relevance. Source: Ishikawa T. (2024), Cell.
 
 ## Discussion
 

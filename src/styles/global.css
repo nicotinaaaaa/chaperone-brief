@@ -129,10 +129,44 @@ button:focus-visible,
 	white-space: nowrap;
 }
 
-/* A figure or table caption is a paragraph made only of emphasis text,
-   immediately after an image-only paragraph or a table. Every figure in a
-   review carries a source-attribution line this way, so it needs to read as
-   distinct from body copy, not just italic body text. */
+/* Primary caption convention: a paragraph starting "**Figure 1.**" or
+   "**Table 1.**" right after an image or a table. rehype-captions.ts turns
+   the pair into <figure><figcaption>…</figcaption></figure> at build time,
+   splitting the trailing source-attribution sentence into its own span. */
+.prose figure {
+	margin: 0.5em 0 1.75em;
+}
+
+.prose figure img {
+	margin-bottom: 0;
+}
+
+.prose figcaption {
+	font-family: var(--font-sans);
+	font-size: 0.85em;
+	line-height: 1.5;
+	color: var(--color-text-muted);
+	border-left: 2px solid var(--color-border);
+	padding-left: 0.75em;
+}
+
+.prose figcaption .caption-label {
+	font-weight: 700;
+	color: var(--color-text);
+}
+
+.prose figcaption .caption-source {
+	display: block;
+	margin-top: 0.2em;
+	font-size: 0.9em;
+	color: var(--color-text-muted);
+	opacity: 0.85;
+}
+
+/* Fallback only: an italic-only paragraph after an image/table that never
+   matched the bold-prefix rule above (so it wasn't turned into a <figure>).
+   Cheap to keep, but the bold-prefix convention is authoritative — this
+   never fires on anything the rehype transform already handled. */
 .prose :where(p:has(> img:only-child)) {
 	margin-bottom: 0.5em;
 }
