@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Pinned to match the Node version this project is developed and tested
+  # against (see README) — Netlify's own default may be different and drift
+  # over time, and a version mismatch is not worth debugging remotely.
+  NODE_VERSION = "24.21.0"

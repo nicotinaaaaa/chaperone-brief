@@ -18,7 +18,7 @@ npx astro check  # TypeScript / content-schema diagnostics
 
 Raw content lands in [`inbox/`](inbox/README.md) (gitignored — nothing there
 is published as-is), then gets processed by an ingest script into
-`src/content/<type>/`, where it's validated against a strict schema.
+`src/content/<type>/`, where it's validated against a strict schema:
 
 ```bash
 node scripts/new-brief.mjs inbox/science-brief-2026-09-27.md
@@ -26,101 +26,17 @@ node scripts/new-review.mjs inbox/some-review.md
 node scripts/new-news.mjs inbox/some-news-item.md
 ```
 
-Each script:
-- Validates existing frontmatter, or derives whatever's missing (title from
-  the first `#` heading, summary from a "Top takeaways" section or the first
-  paragraph, a brief's coverage window from a "Coverage window:" line, and so
-  on) and tells you exactly what it guessed.
-- For briefs specifically: strips an embedded "## Table of contents" section
-  (heading through the next `##` or horizontal rule) if one exists, since the
-  site renders its own sticky table of contents from the real headings — logs
-  exactly what it removed, and is a no-op if there's nothing to strip.
-- Refuses to guess fields that could genuinely be wrong instead of missing —
-  a news item's `link` and `source` must already be in the frontmatter.
-- Fails loudly (non-zero exit, nothing written) on a schema violation, naming
-  the exact field.
-- Never overwrites an existing file in `src/content/` without `--force`.
+Each script validates or derives whatever frontmatter is missing, refuses to
+guess fields that could genuinely be wrong instead of missing, fails loudly
+(nothing written) on a schema violation naming the exact field, and never
+overwrites an existing file without `--force`.
 
-`new-review.mjs` and `new-news.mjs` also accept `--slug custom-slug` to
-override the filename-derived slug. `new-review.mjs` additionally takes:
-
-```bash
-node scripts/new-review.mjs inbox/some-review.md \
-  --docx inbox/some-review.docx \
-  --figures inbox/some-review-figures/
-```
-
-- `--docx <path>`: copied to `public/downloads/<slug>.docx`; sets `docxPath`
-  so the review page shows a download link. Validated to exist before
-  anything is written.
-- `--figures <dir>`: copies the directory's contents to
-  `public/figures/<slug>/` and rewrites the markdown's relative image paths
-  to match. Every relative image the markdown references must already be in
-  that directory, or the script fails before writing anything — it never
-  guesses at a missing figure.
-
-### Figure and table captions
-
-A paragraph directly after an image or a table, starting with a bolded
-`**Figure 1.**` or `**Table 1.**`, is treated as that figure's caption — see
-[`src/lib/rehype-captions.ts`](src/lib/rehype-captions.ts). The label starts
-it, and the final sentence is read as the source attribution and styled
-smaller and muted:
-
-```markdown
-![A diagram of X](figure1.png)
-
-**Figure 1.** What the figure shows, in a sentence or two. Source: Author et
-al. (2025), *Journal Name*, licence.
-```
-
-An italic-only paragraph in the same position is a fallback for content that
-doesn't follow this convention, but the bold-prefix form is authoritative.
+**See [CONTENT.md](CONTENT.md)** for the full frontmatter reference and a
+copy-pasteable template for each content type, every ingest script flag
+(`--slug`, `--docx`, `--figures`), and the figure/table caption convention.
 
 Once `scripts/publish.sh` exists (a later phase), it wraps this: ingest →
 build → commit → push, and is what a scheduled task runs non-interactively.
-
-### Frontmatter reference
-
-**briefs** (`src/content/briefs/science-brief-YYYY-MM-DD.md`)
-
-| field | required | notes |
-| --- | --- | --- |
-| `title` | yes | |
-| `date` | yes | publication date |
-| `windowStart` / `windowEnd` | yes | coverage period |
-| `summary` | yes | 1–2 sentences; used on cards, meta description, RSS |
-| `tags` | no | defaults to `[]` |
-| `itemCount` | no | always recomputed by the ingest script from `###` headings |
-| `draft` | no | defaults to `false`; drafts never appear in a production build |
-
-**reviews** (`src/content/reviews/slug.md`)
-
-| field | required | notes |
-| --- | --- | --- |
-| `title` | yes | |
-| `date` | yes | |
-| `summary` | yes | |
-| `tags` | no | defaults to `[]` |
-| `subfield` | no | e.g. `"immunology"` — powers `/reviews/subfield/[subfield]` |
-| `readingTime` | no | minutes; computed from word count if absent |
-| `sources` | no | array of `{ title, url, authors?, year?, journal?, doi?, pmid? }` — rendered as a numbered reference list |
-| `docxPath` | no | set by `--docx`; shows a "Download as Word document" link |
-| `draft` | no | defaults to `false` |
-
-**news** (`src/content/news/YYYY-MM-DD-slug.md`)
-
-| field | required | notes |
-| --- | --- | --- |
-| `title` | yes | |
-| `date` | yes | |
-| `summary` | yes | |
-| `link` | yes | the URL the item points to — never guessed |
-| `source` | yes | publication name, e.g. `"Nature"` — never guessed |
-| `tags` | no | defaults to `[]` |
-
-Schemas are defined once, in [`src/content/schemas.ts`](src/content/schemas.ts),
-and shared between the Astro build and the ingest scripts.
 
 ## Feeds and SEO
 
@@ -159,16 +75,45 @@ src/
   content.config.ts  # collection definitions (Astro's content-collections config)
   components/        # ToC, cards, header, theme toggle
   layouts/
+  lib/               # feed helpers, the rehype caption transform
   pages/
   styles/
 scripts/
   new-brief.mjs new-review.mjs new-news.mjs
   lib/ingest-helpers.mjs
-inbox/                # staging area for raw content — see inbox/README.md
+inbox/                 # staging area for raw content — see inbox/README.md
+.github/workflows/     # CI: astro check + npm run build on every PR and push to main
+netlify.toml           # Netlify build command, publish dir, pinned Node version
+CONTENT.md             # frontmatter reference and templates for all three content types
 ```
+
+## Versions
+
+Pinned, not just "whatever's installed": this project hit real breaking
+changes between Astro's own stable releases mid-build more than once (the
+content-collections config shape, the default Markdown processor, how
+remark/rehype plugins get wired in). Recorded here so a future upgrade is a
+deliberate decision, not a surprise.
+
+- **Node**: `24.21.0`, pinned in [`netlify.toml`](netlify.toml) and
+  [`.github/workflows/ci.yml`](.github/workflows/ci.yml). If you install a
+  different Node locally, things may still work, but this is the version
+  everything is actually tested and deployed against.
+- **Astro**: `7.3.4` (`astro` in [`package.json`](package.json)/
+  `package-lock.json`). `package-lock.json` is committed and both CI and
+  Netlify install from it with `npm ci` — an exact, reproducible dependency
+  tree, not whatever `npm install` happens to resolve on the day.
 
 ## Deployment
 
-Not yet configured — coming in a later phase, along with `scripts/publish.sh`.
-This section will document the Netlify setup and the non-interactive publish
-flow once both exist.
+- **Netlify** builds automatically from `main`, using
+  [`netlify.toml`](netlify.toml) (`npm run build`, publishes `dist/`, Node
+  pinned as above). One-time setup is manual, in Netlify's web UI — not
+  something this repo can do for itself.
+- **GitHub Actions** ([`.github/workflows/ci.yml`](.github/workflows/ci.yml))
+  runs `astro check` and `npm run build` on every pull request and on every
+  push to `main`, independently of Netlify's own build. A PR with a broken
+  brief or a schema violation fails CI before it can be merged, not after
+  it's already live.
+- `scripts/publish.sh` — the non-interactive ingest → build → commit → push
+  wrapper a scheduled task runs — doesn't exist yet; a later phase.
