@@ -13,7 +13,7 @@ import {
 	printValidationErrors,
 } from './lib/ingest-helpers.mjs';
 
-const { force, slug: slugFlag, inputPath } = parseArgs(process.argv.slice(2));
+const { force, slug: slugFlag, inputPath } = parseArgs(process.argv.slice(2), ['slug']);
 
 if (!inputPath) {
 	fail('Usage: node scripts/new-news.mjs <path-to-markdown> [--slug custom-slug] [--force]');

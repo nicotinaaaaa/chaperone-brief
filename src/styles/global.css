@@ -1,2 +1,250 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+@theme {
+	--font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+	--font-sans:
+		ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+	--color-bg: #fdfcfb;
+	--color-bg-subtle: #f4f2ee;
+	--color-surface: #ffffff;
+	--color-text: #1c1b19;
+	--color-text-muted: #6b6560;
+	--color-border: #e6e2da;
+	--color-accent: #2a6f6a;
+	--color-accent-strong: #1f5551;
+}
+
+/* OS-level dark mode, unless a manual override is set. */
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) {
+		--color-bg: #16181a;
+		--color-bg-subtle: #1e2124;
+		--color-surface: #1c1f22;
+		--color-text: #e9e6e0;
+		--color-text-muted: #9d9890;
+		--color-border: #2d3134;
+		--color-accent: #5fbdb3;
+		--color-accent-strong: #7fd0c7;
+	}
+}
+
+/* Manual override to dark, regardless of OS setting. */
+:root[data-theme="dark"] {
+	--color-bg: #16181a;
+	--color-bg-subtle: #1e2124;
+	--color-surface: #1c1f22;
+	--color-text: #e9e6e0;
+	--color-text-muted: #9d9890;
+	--color-border: #2d3134;
+	--color-accent: #5fbdb3;
+	--color-accent-strong: #7fd0c7;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+body {
+	background-color: var(--color-bg);
+	color: var(--color-text);
+	font-family: var(--font-sans);
+}
+
+.prose :where(h2, h3, h4) {
+	scroll-margin-top: 5.5rem;
+}
+
+::selection {
+	background-color: var(--color-accent);
+	color: var(--color-bg);
+}
+
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 2px;
+	border-radius: 2px;
+}
+
+/* Article body copy: serif, spacious, measured for long reading. */
+.prose {
+	--tw-prose-body: var(--color-text);
+	--tw-prose-headings: var(--color-text);
+	--tw-prose-lead: var(--color-text-muted);
+	--tw-prose-links: var(--color-accent-strong);
+	--tw-prose-bold: var(--color-text);
+	--tw-prose-counters: var(--color-text-muted);
+	--tw-prose-bullets: var(--color-border);
+	--tw-prose-hr: var(--color-border);
+	--tw-prose-quotes: var(--color-text);
+	--tw-prose-quote-borders: var(--color-accent);
+	--tw-prose-captions: var(--color-text-muted);
+	--tw-prose-code: var(--color-text);
+	--tw-prose-th-borders: var(--color-border);
+	--tw-prose-td-borders: var(--color-border);
+
+	font-family: var(--font-serif);
+	font-size: 18px;
+	line-height: 1.7;
+	max-width: 68ch;
+}
+
+@media (min-width: 640px) {
+	.prose {
+		font-size: 19px;
+	}
+}
+
+.prose :where(h1, h2, h3, h4) {
+	font-family: var(--font-sans);
+}
+
+.prose a {
+	text-underline-offset: 3px;
+}
+
+/* External links get a screen-reader hint; see components that add rel/target. */
+.prose a[data-external]::after {
+	content: " ↗";
+	font-size: 0.8em;
+}
+
+/* Wide tables scroll horizontally in their own box instead of breaking layout. */
+.prose table {
+	display: block;
+	overflow-x: auto;
+	white-space: nowrap;
+}
+
+.prose table :where(td, th) {
+	white-space: nowrap;
+}
+
+/* A figure or table caption is a paragraph made only of emphasis text,
+   immediately after an image-only paragraph or a table. Every figure in a
+   review carries a source-attribution line this way, so it needs to read as
+   distinct from body copy, not just italic body text. */
+.prose :where(p:has(> img:only-child)) {
+	margin-bottom: 0.5em;
+}
+
+.prose :where(p:has(> img:only-child) + p:has(> em:only-child)),
+.prose :where(table + p:has(> em:only-child)) {
+	margin-top: 0;
+	font-family: var(--font-sans);
+	font-size: 0.85em;
+	line-height: 1.5;
+	color: var(--color-text-muted);
+	border-left: 2px solid var(--color-border);
+	padding-left: 0.75em;
+}
+
+.prose :where(p:has(> img:only-child) + p:has(> em:only-child)) {
+	margin-bottom: 1.75em;
+}
+
+/* Reference / bibliography list, used on review pages. */
+.reference-list {
+	list-style: decimal;
+	padding-left: 1.5em;
+	font-size: 0.95em;
+	line-height: 1.6;
+	color: var(--color-text-muted);
+}
+
+.reference-list li {
+	margin-bottom: 0.75em;
+}
+
+.reference-list a {
+	color: var(--color-accent-strong);
+	text-underline-offset: 2px;
+}
+
+.draft-badge {
+	display: inline-block;
+	padding: 0.2rem 0.6rem;
+	border-radius: 0.3rem;
+	font-family: var(--font-sans);
+	font-size: 0.75rem;
+	font-weight: 600;
+	background: color-mix(in srgb, #d97706 20%, transparent);
+	color: #d97706;
+	border: 1px solid color-mix(in srgb, #d97706 40%, transparent);
+}
+
+.tag-pill {
+	display: inline-block;
+	border-radius: 999px;
+	padding: 0.2rem 0.7rem;
+	font-family: var(--font-sans);
+	font-size: 0.75rem;
+	color: var(--color-text-muted);
+	background: var(--color-bg-subtle);
+	border: 1px solid var(--color-border);
+}
+
+.tag-pill:hover {
+	color: var(--color-text);
+	border-color: var(--color-text-muted);
+}
+
+.download-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-family: var(--font-sans);
+	font-size: 0.9rem;
+	font-weight: 600;
+	padding: 0.6rem 1rem;
+	border-radius: 0.5rem;
+	background: var(--color-accent);
+	color: white;
+}
+
+.download-link:hover {
+	background: var(--color-accent-strong);
+}
+
+@media print {
+	nav,
+	header,
+	footer,
+	.no-print {
+		display: none !important;
+	}
+
+	body {
+		background: white;
+		color: black;
+	}
+
+	.prose {
+		max-width: none;
+		font-size: 12pt;
+	}
+
+	.prose a {
+		color: black;
+		text-decoration: underline;
+	}
+
+	.prose a[href^="http"]::after {
+		content: " (" attr(href) ")";
+		font-size: 0.85em;
+		font-weight: normal;
+	}
+
+	a {
+		color: black !important;
+	}
+}

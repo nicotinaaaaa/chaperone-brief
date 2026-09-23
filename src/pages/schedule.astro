@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { scheduleTasks, nextRun } from '../data/schedule';
+
+const dateFmt = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' });
+---
+
+<BaseLayout title="Schedule" description="What publishes automatically on this site, and how often.">
+	<h1 class="font-sans text-2xl font-bold" style="color: var(--color-text);">Schedule</h1>
+	<p class="mt-2 font-serif" style="color: var(--color-text-muted);">
+		What runs on its own, and how often — so what shows up isn't a surprise.
+	</p>
+
+	<div class="mt-8 flex flex-col gap-6">
+		{
+			scheduleTasks.map((task) => (
+				<div class="rounded-lg border p-5" style="border-color: var(--color-border);">
+					<div class="flex flex-wrap items-center justify-between gap-2">
+						<h2 class="font-sans text-lg font-semibold" style="color: var(--color-text);">
+							{task.name}
+						</h2>
+						<span
+							class="font-sans text-xs font-semibold uppercase tracking-wide"
+							style={`color: ${task.active ? 'var(--color-accent-strong)' : 'var(--color-text-muted)'};`}
+						>
+							{task.active ? 'Active' : 'Inactive'}
+						</span>
+					</div>
+					<p class="mt-2 font-serif" style="color: var(--color-text-muted);">{task.description}</p>
+					<dl class="mt-4 grid grid-cols-1 gap-x-6 gap-y-1 font-sans text-sm sm:grid-cols-3" style="color: var(--color-text-muted);">
+						<div>
+							<dt class="font-semibold" style="color: var(--color-text);">
+								Cadence
+							</dt>
+							<dd>{task.cadenceLabel}</dd>
+						</div>
+						<div>
+							<dt class="font-semibold" style="color: var(--color-text);">
+								Publishes to
+							</dt>
+							<dd>
+								<a href={task.publishesTo}>{task.publishesTo}</a>
+							</dd>
+						</div>
+						{task.active && (
+							<div>
+								<dt class="font-semibold" style="color: var(--color-text);">
+									Next run
+								</dt>
+								<dd>
+									<time datetime={nextRun(task.cadence).toISOString()}>
+										{dateFmt.format(nextRun(task.cadence))} UTC
+									</time>
+								</dd>
+							</div>
+						)}
+					</dl>
+				</div>
+			))
+		}
+	</div>
+
+	<p class="mt-8 font-sans text-xs" style="color: var(--color-text-muted);">
+		Next-run times are computed from each task's cadence at build time, so they're accurate as of the
+		last deploy rather than live.
+	</p>
+</BaseLayout>

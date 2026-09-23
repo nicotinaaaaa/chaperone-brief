@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContentCard from '../../components/ContentCard.astro';
+import { briefToFeedItem, byDateDesc, prodFilter } from '../../lib/feed';
+
+const briefs = await getCollection('briefs', prodFilter);
+const items = briefs.map(briefToFeedItem).sort(byDateDesc);
+
+const monthFmt = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' });
+const groups = new Map<string, typeof items>();
+for (const item of items) {
+	const key = monthFmt.format(item.date);
+	if (!groups.has(key)) groups.set(key, []);
+	groups.get(key)!.push(item);
+}
+---
+
+<BaseLayout title="Briefs" description="The weekly science and biotech digest, archived.">
+	<h1 class="font-sans text-2xl font-bold" style="color: var(--color-text);">Briefs</h1>
+	<p class="mt-2 font-serif" style="color: var(--color-text-muted);">The weekly science and biotech digest.</p>
+
+	{
+		groups.size > 0 ? (
+			Array.from(groups.entries()).map(([month, monthItems]) => (
+				<section class="mt-8">
+					<h2 class="font-sans text-sm font-semibold uppercase tracking-wide" style="color: var(--color-text-muted);">
+						{month}
+					</h2>
+					<div class="mt-2">
+						{monthItems.map((item) => (
+							<ContentCard item={item} />
+						))}
+					</div>
+				</section>
+			))
+		) : (
+			<p class="mt-8">No briefs published yet.</p>
+		)
+	}
+</BaseLayout>

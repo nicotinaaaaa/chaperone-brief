@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContentCard from '../../components/ContentCard.astro';
+import { newsToFeedItem, byDateDesc } from '../../lib/feed';
+
+const news = await getCollection('news');
+const items = news.map(newsToFeedItem).sort(byDateDesc);
+---
+
+<BaseLayout title="News" description="Short link-posts — one item, a couple of sentences, a link out.">
+	<h1 class="font-sans text-2xl font-bold" style="color: var(--color-text);">News</h1>
+	<p class="mt-2 font-serif" style="color: var(--color-text-muted);">
+		Quick hits worth flagging between briefs. Titles link to the source; the small icon links here.
+	</p>
+	<div class="mt-8">
+		{items.length > 0 ? items.map((item) => <ContentCard item={item} />) : <p>No news items yet.</p>}
+	</div>
+</BaseLayout>

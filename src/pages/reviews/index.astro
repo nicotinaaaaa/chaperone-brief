@@ -1,0 +1,34 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContentCard from '../../components/ContentCard.astro';
+import { reviewToFeedItem, byDateDesc, prodFilter } from '../../lib/feed';
+
+const reviews = await getCollection('reviews', prodFilter);
+const items = reviews.map(reviewToFeedItem).sort(byDateDesc);
+
+const subfields = [...new Set(reviews.map((r) => r.data.subfield).filter((s): s is string => !!s))].sort();
+---
+
+<BaseLayout title="Reviews" description="Longer, standalone science and biotech writing — deep reads, literature reviews, and primers.">
+	<h1 class="font-sans text-2xl font-bold" style="color: var(--color-text);">Reviews</h1>
+	<p class="mt-2 font-serif" style="color: var(--color-text-muted);">
+		Deep reads, literature reviews, and primers — not tied to a weekly cycle.
+	</p>
+
+	{
+		subfields.length > 0 && (
+			<div class="mt-5 flex flex-wrap gap-2">
+				{subfields.map((subfield) => (
+					<a href={`/reviews/subfield/${subfield}`} class="tag-pill">
+						{subfield}
+					</a>
+				))}
+			</div>
+		)
+	}
+
+	<div class="mt-8">
+		{items.length > 0 ? items.map((item) => <ContentCard item={item} />) : <p>No reviews published yet.</p>}
+	</div>
+</BaseLayout>

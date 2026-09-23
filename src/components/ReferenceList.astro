@@ -1,0 +1,41 @@
+---
+import type { ReviewData } from '../content/schemas';
+
+interface Props {
+	sources: NonNullable<ReviewData['sources']>;
+}
+
+const { sources } = Astro.props;
+---
+
+<ol class="reference-list">
+	{
+		sources.map((s) => (
+			<li>
+				{s.authors && <span>{s.authors} </span>}
+				{s.year && <span>({s.year}). </span>}
+				<a href={s.url} target="_blank" rel="noopener noreferrer" data-external>
+					{s.title}
+				</a>
+				{'. '}
+				{s.journal && <em>{s.journal}. </em>}
+				{s.doi && (
+					<a href={`https://doi.org/${s.doi}`} target="_blank" rel="noopener noreferrer" data-external>
+						DOI: {s.doi}
+					</a>
+				)}
+				{s.doi && s.pmid && ' · '}
+				{s.pmid && (
+					<a
+						href={`https://pubmed.ncbi.nlm.nih.gov/${s.pmid}`}
+						target="_blank"
+						rel="noopener noreferrer"
+						data-external
+					>
+						PMID: {s.pmid}
+					</a>
+				)}
+			</li>
+		))
+	}
+</ol>

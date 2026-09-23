@@ -1,6 +1,8 @@
 ---
 import '../styles/global.css';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import Header from '../components/Header.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 
 interface Props {
 	title?: string;
@@ -14,25 +16,41 @@ const pageTitle = title ? `${title} — ${SITE_TITLE}` : SITE_TITLE;
 <!doctype html>
 <html lang="en">
 	<head>
+		<script is:inline>
+			(function () {
+				try {
+					var stored = localStorage.getItem('theme');
+					if (stored === 'light' || stored === 'dark') {
+						document.documentElement.setAttribute('data-theme', stored);
+					}
+				} catch (e) {
+					/* private browsing / blocked storage — falls back to prefers-color-scheme */
+				}
+			})();
+		</script>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="color-scheme" content="light dark" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{pageTitle}</title>
 		<meta name="description" content={description} />
 	</head>
-	<body class="min-h-screen bg-white text-neutral-900 antialiased">
-		<header class="border-b border-neutral-200">
-			<div class="mx-auto max-w-3xl px-4 py-4">
-				<a href="/" class="font-semibold">{SITE_TITLE}</a>
-			</div>
-		</header>
-		<main class="mx-auto max-w-3xl px-4 py-10">
+	<body>
+		<Header>
+			<ThemeToggle slot="theme-toggle" />
+		</Header>
+		<main class="mx-auto max-w-4xl px-4 py-10">
 			<slot />
 		</main>
-		<footer class="mt-16 border-t border-neutral-200">
-			<div class="mx-auto max-w-3xl px-4 py-6 text-sm text-neutral-500">
-				{SITE_TITLE} — phase 1 scaffold, design pass comes next
+		<footer class="mt-16 border-t" style="border-color: var(--color-border);">
+			<div
+				class="mx-auto max-w-4xl px-4 py-6 font-sans text-sm"
+				style="color: var(--color-text-muted);"
+			>
+				<a href="/schedule">What publishes automatically</a>
+				·
+				<a href="/about">About</a>
 			</div>
 		</footer>
 	</body>

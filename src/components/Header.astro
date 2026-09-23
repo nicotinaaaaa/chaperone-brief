@@ -1,0 +1,45 @@
+---
+import { SITE_TITLE } from '../consts';
+
+const navItems = [
+	{ href: '/briefs', label: 'Briefs' },
+	{ href: '/reviews', label: 'Reviews' },
+	{ href: '/news', label: 'News' },
+	{ href: '/schedule', label: 'Schedule' },
+	{ href: '/about', label: 'About' },
+];
+
+const path = Astro.url.pathname;
+function isActive(href: string) {
+	return path === href || path.startsWith(`${href}/`);
+}
+---
+
+<header class="border-b" style="border-color: var(--color-border);">
+	<div class="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-4">
+		<a href="/" class="font-sans text-lg font-semibold tracking-tight" style="color: var(--color-text);">
+			{SITE_TITLE}
+		</a>
+		<nav aria-label="Main" class="flex flex-wrap items-center gap-1">
+			<ul class="flex flex-wrap items-center gap-1 text-sm">
+				{
+					navItems.map((item) => (
+						<li>
+							<a
+								href={item.href}
+								aria-current={isActive(item.href) ? 'page' : undefined}
+								class="rounded-md px-2.5 py-1.5 font-sans"
+								style={`color: ${isActive(item.href) ? 'var(--color-text)' : 'var(--color-text-muted)'}; ${isActive(item.href) ? 'background-color: var(--color-bg-subtle);' : ''}`}
+							>
+								{item.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+			<div class="ml-2 border-l pl-2" style="border-color: var(--color-border);">
+				<slot name="theme-toggle" />
+			</div>
+		</nav>
+	</div>
+</header>

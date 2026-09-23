@@ -2,23 +2,24 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
+import ReferenceList from '../../components/ReferenceList.astro';
 import { prodFilter } from '../../lib/feed';
 
 export async function getStaticPaths() {
-	const briefs = await getCollection('briefs', prodFilter);
-	return briefs.map((entry) => ({
+	const reviews = await getCollection('reviews', prodFilter);
+	return reviews.map((entry) => ({
 		params: { slug: entry.id },
 		props: { entry },
 	}));
 }
 
 interface Props {
-	entry: CollectionEntry<'briefs'>;
+	entry: CollectionEntry<'reviews'>;
 }
 
 const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
-const { title, date, windowStart, windowEnd, summary, tags, itemCount, draft } = entry.data;
+const { title, date, summary, tags, subfield, readingTime, sources, docxPath, draft } = entry.data;
 const hasToc = headings.filter((h) => h.depth === 2).length >= 2;
 
 const dateFmt = new Intl.DateTimeFormat('en-US', { dateStyle: 'long' });
@@ -32,8 +33,8 @@ const dateFmt = new Intl.DateTimeFormat('en-US', { dateStyle: 'long' });
 			<h1 class="font-sans text-3xl font-bold" style="color: var(--color-text);">{title}</h1>
 			<p class="mt-2 font-sans text-sm" style="color: var(--color-text-muted);">
 				<time datetime={date.toISOString()}>{dateFmt.format(date)}</time>
-				 · Covers {dateFmt.format(windowStart)}–{dateFmt.format(windowEnd)}
-				{itemCount !== undefined && <> · {itemCount} stories</>}
+				{subfield && <> · {subfield}</>}
+				{readingTime !== undefined && <> · {readingTime} min read</>}
 			</p>
 			{
 				tags.length > 0 && (
@@ -49,9 +50,30 @@ const dateFmt = new Intl.DateTimeFormat('en-US', { dateStyle: 'long' });
 				)
 			}
 			<p class="mt-4 font-serif text-lg" style="color: var(--color-text-muted);">{summary}</p>
+			{
+				docxPath && (
+					<a href={docxPath} class="download-link mt-5" download>
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+							<path d="M12 3v12m0 0-4-4m4 4 4-4" />
+							<path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+						</svg>
+						Download as Word document
+					</a>
+				)
+			}
 			<div class="prose mt-8">
 				<Content />
 			</div>
+			{
+				sources && sources.length > 0 && (
+					<div class="mt-10 border-t pt-6" style="border-color: var(--color-border);">
+						<h2 class="font-sans text-lg font-semibold" style="color: var(--color-text);">
+							References
+						</h2>
+						<ReferenceList sources={sources} />
+					</div>
+				)
+			}
 		</article>
 	</div>
 </BaseLayout>

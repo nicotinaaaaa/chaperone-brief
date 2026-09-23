@@ -22,3 +22,7 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# raw content staged for ingest — never published as-is, see inbox/README.md
+/inbox/*
+!/inbox/README.md

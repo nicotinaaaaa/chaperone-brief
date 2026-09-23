@@ -1,0 +1,91 @@
+---
+---
+
+<button type="button" id="theme-toggle" class="theme-toggle" aria-label="Switch to dark theme" hidden>
+	<svg
+		data-icon="sun"
+		width="18"
+		height="18"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		aria-hidden="true"
+	>
+		<circle cx="12" cy="12" r="4"></circle>
+		<path
+			d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+		></path>
+	</svg>
+	<svg
+		data-icon="moon"
+		width="18"
+		height="18"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		aria-hidden="true"
+	>
+		<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path>
+	</svg>
+</button>
+
+<style>
+	.theme-toggle {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.25rem;
+		height: 2.25rem;
+		border-radius: 0.5rem;
+		border: 1px solid var(--color-border);
+		color: var(--color-text-muted);
+		background: transparent;
+	}
+
+	.theme-toggle:hover {
+		color: var(--color-text);
+		border-color: var(--color-text-muted);
+	}
+</style>
+
+<script is:inline>
+	(function () {
+		var btn = document.getElementById('theme-toggle');
+		if (!btn) return;
+		var sun = btn.querySelector('[data-icon="sun"]');
+		var moon = btn.querySelector('[data-icon="moon"]');
+
+		function isDarkNow() {
+			var explicit = document.documentElement.getAttribute('data-theme');
+			if (explicit === 'dark') return true;
+			if (explicit === 'light') return false;
+			return window.matchMedia('(prefers-color-scheme: dark)').matches;
+		}
+
+		function sync() {
+			var dark = isDarkNow();
+			sun.hidden = dark;
+			moon.hidden = !dark;
+			btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+		}
+
+		btn.addEventListener('click', function () {
+			var next = isDarkNow() ? 'light' : 'dark';
+			document.documentElement.setAttribute('data-theme', next);
+			try {
+				localStorage.setItem('theme', next);
+			} catch (e) {
+				/* private browsing / blocked storage — theme just won't persist */
+			}
+			sync();
+		});
+
+		sync();
+		btn.hidden = false;
+	})();
+</script>

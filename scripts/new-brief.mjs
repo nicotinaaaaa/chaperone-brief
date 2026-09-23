@@ -10,6 +10,7 @@ import {
 	deriveSummary,
 	deriveCoverageWindow,
 	countTopLevelItems,
+	stripTableOfContents,
 	toDateOnly,
 	printValidationErrors,
 } from './lib/ingest-helpers.mjs';
@@ -80,6 +81,9 @@ data.draft ??= false;
 const itemCount = countTopLevelItems(body);
 data.itemCount = itemCount;
 
+const tocResult = stripTableOfContents(body);
+const finalBody = tocResult.removed ? tocResult.body : body;
+
 const result = briefsSchema.safeParse(data);
 if (!result.success) {
 	printValidationErrors(filename, result.error.issues);
@@ -102,7 +106,7 @@ const outputData = {
 };
 
 fs.mkdirSync(destDir, { recursive: true });
-fs.writeFileSync(destPath, matter.stringify(body, outputData));
+fs.writeFileSync(destPath, matter.stringify(finalBody, outputData));
 
 console.log(`✓ Wrote ${path.relative(process.cwd(), destPath)}`);
 if (guesses.length > 0) {
@@ -112,3 +116,12 @@ if (guesses.length > 0) {
 	console.log('All frontmatter was present and valid — nothing guessed.');
 }
 console.log(`itemCount: ${itemCount} (### headings)`);
+if (tocResult.removed) {
+	const { text, itemCount: tocItemCount, consumedTrailingRule } = tocResult.removed;
+	console.log(
+		`Removed embedded table of contents (${tocItemCount} link${tocItemCount === 1 ? '' : 's'}${consumedTrailingRule ? ', including its trailing rule' : ''}) — the sticky ToC replaces it:`,
+	);
+	for (const line of text.split('\n')) console.log(`    ${line}`);
+} else {
+	console.log('No embedded table of contents found — nothing removed.');
+}

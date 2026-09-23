@@ -14,15 +14,30 @@ import {
 	printValidationErrors,
 } from './lib/ingest-helpers.mjs';
 
-const { force, slug: slugFlag, inputPath } = parseArgs(process.argv.slice(2));
+const {
+	force,
+	slug: slugFlag,
+	docx: docxFlag,
+	inputPath,
+} = parseArgs(process.argv.slice(2), ['slug', 'docx']);
 
 if (!inputPath) {
-	fail('Usage: node scripts/new-review.mjs <path-to-markdown> [--slug custom-slug] [--force]');
+	fail(
+		'Usage: node scripts/new-review.mjs <path-to-markdown> [--slug custom-slug] [--docx <path-to-.docx>] [--force]',
+	);
 }
 
 const resolvedInput = path.resolve(inputPath);
 if (!fs.existsSync(resolvedInput)) {
 	fail(`File not found: ${resolvedInput}`);
+}
+
+let resolvedDocx;
+if (docxFlag) {
+	resolvedDocx = path.resolve(docxFlag);
+	if (!fs.existsSync(resolvedDocx)) {
+		fail(`--docx file not found: ${resolvedDocx}`);
+	}
 }
 
 const raw = fs.readFileSync(resolvedInput, 'utf-8');
@@ -65,19 +80,25 @@ if (!data.readingTime) {
 	guesses.push(`readingTime ← computed from word count (${words} words): ${minutes} min`);
 }
 
-const result = reviewsSchema.safeParse(data);
-if (!result.success) {
-	printValidationErrors(path.basename(resolvedInput), result.error.issues);
-	process.exit(1);
-}
-
+// Computed before validation (from the pre-parse title) so a --docx path can
+// reference the final filename as part of the data that gets validated.
 const slug =
 	slugFlag ??
-	(result.data.title ? slugify(result.data.title) : undefined) ??
+	(data.title ? slugify(data.title) : undefined) ??
 	slugify(path.basename(resolvedInput, path.extname(resolvedInput)));
 
 if (!slug) {
 	fail('Could not determine a slug. Pass one explicitly with --slug.');
+}
+
+if (resolvedDocx) {
+	data.docxPath = `/downloads/${slug}.docx`;
+}
+
+const result = reviewsSchema.safeParse(data);
+if (!result.success) {
+	printValidationErrors(path.basename(resolvedInput), result.error.issues);
+	process.exit(1);
 }
 
 const destDir = path.resolve('src/content/reviews');
@@ -85,6 +106,12 @@ const destPath = path.join(destDir, `${slug}.md`);
 
 if (fs.existsSync(destPath) && !force) {
 	fail(`${destPath} already exists. Re-run with --force to overwrite.`);
+}
+
+const downloadsDir = path.resolve('public/downloads');
+const docxDestPath = resolvedDocx ? path.join(downloadsDir, `${slug}.docx`) : undefined;
+if (docxDestPath && fs.existsSync(docxDestPath) && !force) {
+	fail(`${docxDestPath} already exists. Re-run with --force to overwrite.`);
 }
 
 const outputData = {
@@ -95,7 +122,15 @@ const outputData = {
 fs.mkdirSync(destDir, { recursive: true });
 fs.writeFileSync(destPath, matter.stringify(body, outputData));
 
+if (resolvedDocx && docxDestPath) {
+	fs.mkdirSync(downloadsDir, { recursive: true });
+	fs.copyFileSync(resolvedDocx, docxDestPath);
+}
+
 console.log(`✓ Wrote ${path.relative(process.cwd(), destPath)}`);
+if (docxDestPath) {
+	console.log(`✓ Copied .docx to ${path.relative(process.cwd(), docxDestPath)} (docxPath: ${outputData.docxPath})`);
+}
 if (guesses.length > 0) {
 	console.log('Guessed:');
 	for (const g of guesses) console.log(`  - ${g}`);

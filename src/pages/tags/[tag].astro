@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContentCard from '../../components/ContentCard.astro';
+import { briefToFeedItem, reviewToFeedItem, newsToFeedItem, byDateDesc, prodFilter } from '../../lib/feed';
+
+export async function getStaticPaths() {
+	const [briefs, reviews, news] = await Promise.all([
+		getCollection('briefs', prodFilter),
+		getCollection('reviews', prodFilter),
+		getCollection('news'),
+	]);
+	const tags = new Set<string>();
+	for (const entry of [...briefs, ...reviews, ...news]) {
+		for (const tag of entry.data.tags) tags.add(tag);
+	}
+	return Array.from(tags).map((tag) => ({ params: { tag } }));
+}
+
+const { tag } = Astro.params;
+const [briefs, reviews, news] = await Promise.all([
+	getCollection('briefs', prodFilter),
+	getCollection('reviews', prodFilter),
+	getCollection('news'),
+]);
+
+const items = [
+	...briefs.filter((e) => e.data.tags.includes(tag!)).map(briefToFeedItem),
+	...reviews.filter((e) => e.data.tags.includes(tag!)).map(reviewToFeedItem),
+	...news.filter((e) => e.data.tags.includes(tag!)).map(newsToFeedItem),
+].sort(byDateDesc);
+---
+
+<BaseLayout title={`Tag: ${tag}`} description={`Everything tagged "${tag}".`}>
+	<p class="font-sans text-sm" style="color: var(--color-text-muted);">Tag</p>
+	<h1 class="mt-1 font-sans text-2xl font-bold" style="color: var(--color-text);">{tag}</h1>
+	<div class="mt-8">
+		{items.map((item) => <ContentCard item={item} />)}
+	</div>
+</BaseLayout>

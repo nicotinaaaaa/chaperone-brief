@@ -28,19 +28,6 @@ draft: false
 
 ---
 
-## Table of contents
-
-1. [Regulatory decisions and approvals](#1-regulatory-decisions-and-approvals)
-2. [Clinical trial results](#2-clinical-trial-results)
-3. [Safety setbacks and failures](#3-safety-setbacks-and-failures)
-4. [Deals, money and corporate strategy](#4-deals-money-and-corporate-strategy)
-5. [Basic science and preclinical discoveries](#5-basic-science-and-preclinical-discoveries)
-6. [Near-horizon watchlist](#6-near-horizon-watchlist)
-7. [Top takeaways](#7-top-takeaways)
-8. [Sources](#8-sources)
-
----
-
 ## 1. Regulatory decisions and approvals
 
 ### FDA approves Scholar Rock's Isembyld, the first muscle-targeted drug for spinal muscular atrophy

@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ContentCard from '../../../components/ContentCard.astro';
+import { reviewToFeedItem, byDateDesc, prodFilter } from '../../../lib/feed';
+
+export async function getStaticPaths() {
+	const reviews = await getCollection('reviews', prodFilter);
+	const subfields = [...new Set(reviews.map((r) => r.data.subfield).filter((s): s is string => !!s))];
+	return subfields.map((subfield) => ({ params: { subfield } }));
+}
+
+const { subfield } = Astro.params;
+const reviews = await getCollection('reviews', prodFilter);
+const items = reviews
+	.filter((r) => r.data.subfield === subfield)
+	.map(reviewToFeedItem)
+	.sort(byDateDesc);
+---
+
+<BaseLayout title={`Reviews: ${subfield}`} description={`Reviews in ${subfield}.`}>
+	<p class="font-sans text-sm" style="color: var(--color-text-muted);">
+		<a href="/reviews">Reviews</a> / {subfield}
+	</p>
+	<h1 class="mt-1 font-sans text-2xl font-bold capitalize" style="color: var(--color-text);">
+		{subfield}
+	</h1>
+	<div class="mt-8">
+		{items.map((item) => <ContentCard item={item} />)}
+	</div>
+</BaseLayout>

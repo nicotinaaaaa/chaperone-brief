@@ -1,0 +1,205 @@
+---
+interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
+
+interface Section {
+	slug: string;
+	text: string;
+	children: { slug: string; text: string }[];
+}
+
+interface Props {
+	headings: Heading[];
+}
+
+const { headings } = Astro.props;
+
+const relevant = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const sections: Section[] = [];
+for (const heading of relevant) {
+	if (heading.depth === 2) {
+		sections.push({ slug: heading.slug, text: heading.text, children: [] });
+	} else if (sections.length > 0) {
+		sections[sections.length - 1].children.push({ slug: heading.slug, text: heading.text });
+	}
+}
+
+// A flat list of one or two headings isn't worth a ToC for.
+const show = sections.length >= 2;
+---
+
+{
+	show && (
+		<div class="toc-wrapper hidden lg:block">
+			<nav data-toc aria-label="Table of contents" hidden>
+				<p class="toc-label">Contents</p>
+				<ol>
+					{sections.map((section) => (
+						<li data-toc-group={section.slug}>
+							<a href={`#${section.slug}`} data-toc-slug={section.slug}>
+								{section.text}
+							</a>
+							{section.children.length > 0 && (
+								<ul hidden>
+									{section.children.map((child) => (
+										<li>
+											<a href={`#${child.slug}`} data-toc-slug={child.slug}>
+												{child.text}
+											</a>
+										</li>
+									))}
+								</ul>
+							)}
+						</li>
+					))}
+				</ol>
+			</nav>
+		</div>
+	)
+}
+
+<style>
+	.toc-wrapper {
+		position: sticky;
+		top: 5.5rem;
+		max-height: calc(100vh - 7rem);
+		overflow-y: auto;
+		font-family: var(--font-sans);
+	}
+
+	nav[data-toc] {
+		font-size: 0.8rem;
+		line-height: 1.4;
+	}
+
+	.toc-label {
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		font-size: 0.7rem;
+		color: var(--color-text-muted);
+		margin-bottom: 0.5rem;
+	}
+
+	nav[data-toc] ol {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+	}
+
+	nav[data-toc] a {
+		display: block;
+		padding: 0.15rem 0;
+		color: var(--color-text-muted);
+		border-left: 2px solid transparent;
+		padding-left: 0.6rem;
+	}
+
+	nav[data-toc] > ol > li > a {
+		font-weight: 500;
+		color: var(--color-text);
+	}
+
+	nav[data-toc] ul {
+		margin-top: 0.3rem;
+		margin-bottom: 0.2rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+
+	nav[data-toc] ul a {
+		font-size: 0.78rem;
+	}
+
+	nav[data-toc] a.is-active {
+		color: var(--color-accent-strong);
+		border-left-color: var(--color-accent);
+		font-weight: 600;
+	}
+</style>
+
+<script>
+	function initToc() {
+		const nav = document.querySelector('nav[data-toc]');
+		if (!(nav instanceof HTMLElement)) return;
+
+		const article = document.querySelector('[data-toc-source]');
+		if (!article) return;
+
+		const headingEls = Array.from(article.querySelectorAll('h2[id], h3[id]')) as HTMLElement[];
+		if (headingEls.length === 0) return;
+
+		const links = new Map<string, HTMLAnchorElement>();
+		nav.querySelectorAll('a[data-toc-slug]').forEach((a) => {
+			const slug = a.getAttribute('data-toc-slug');
+			if (slug) links.set(slug, a as HTMLAnchorElement);
+		});
+
+		const groups = new Map<string, HTMLElement | null>();
+		nav.querySelectorAll('[data-toc-group]').forEach((li) => {
+			const slug = li.getAttribute('data-toc-group');
+			if (slug) groups.set(slug, li.querySelector(':scope > ul'));
+		});
+
+		const owner = new Map<string, string>();
+		let currentH2: string | null = null;
+		for (const el of headingEls) {
+			if (el.tagName === 'H2') {
+				currentH2 = el.id;
+				owner.set(el.id, el.id);
+			} else if (currentH2) {
+				owner.set(el.id, currentH2);
+			}
+		}
+
+		let activeId = headingEls[0].id;
+		const visible = new Set<string>();
+
+		function applyActive() {
+			for (const [slug, link] of links) {
+				const isActive = slug === activeId;
+				link.classList.toggle('is-active', isActive);
+				if (isActive) link.setAttribute('aria-current', 'location');
+				else link.removeAttribute('aria-current');
+			}
+			const openGroup = owner.get(activeId);
+			for (const [slug, childrenEl] of groups) {
+				if (childrenEl) childrenEl.hidden = slug !== openGroup;
+			}
+		}
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting) visible.add(entry.target.id);
+					else visible.delete(entry.target.id);
+				}
+				for (let i = headingEls.length - 1; i >= 0; i--) {
+					if (visible.has(headingEls[i].id)) {
+						if (activeId !== headingEls[i].id) {
+							activeId = headingEls[i].id;
+							applyActive();
+						}
+						break;
+					}
+				}
+			},
+			{ rootMargin: '-96px 0px -70% 0px', threshold: 0 },
+		);
+
+		headingEls.forEach((el) => observer.observe(el));
+
+		applyActive();
+		nav.hidden = false;
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initToc);
+	} else {
+		initToc();
+	}
+</script>

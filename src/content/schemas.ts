@@ -11,20 +11,25 @@ export const briefsSchema = z.object({
 	draft: z.boolean().default(false),
 });
 
+export const reviewSourceSchema = z.object({
+	title: z.string(),
+	url: z.url(),
+	authors: z.string().optional(),
+	year: z.coerce.number().int().optional(),
+	journal: z.string().optional(),
+	doi: z.string().optional(),
+	pmid: z.coerce.number().int().optional(),
+});
+
 export const reviewsSchema = z.object({
 	title: z.string(),
 	date: z.coerce.date(),
 	summary: z.string(),
 	tags: z.array(z.string()).default([]),
+	subfield: z.string().optional(),
 	readingTime: z.number().int().positive().optional(),
-	sources: z
-		.array(
-			z.object({
-				title: z.string(),
-				url: z.url(),
-			}),
-		)
-		.optional(),
+	sources: z.array(reviewSourceSchema).optional(),
+	docxPath: z.string().startsWith('/').optional(),
 	draft: z.boolean().default(false),
 });
 

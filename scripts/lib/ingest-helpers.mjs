@@ -1,13 +1,23 @@
-export function parseArgs(argv) {
+// valueFlags: names of flags that take a following value, e.g. ['slug', 'docx']
+// for --slug <value> --docx <value>. Returns { force, inputPath, ...values }.
+export function parseArgs(argv, valueFlags = []) {
 	const force = argv.includes('--force');
-	const slugIndex = argv.indexOf('--slug');
-	const slug = slugIndex !== -1 ? argv[slugIndex + 1] : undefined;
+	const values = {};
+	const consumed = new Set();
+	for (const flag of valueFlags) {
+		const index = argv.indexOf(`--${flag}`);
+		if (index !== -1) {
+			values[flag] = argv[index + 1];
+			consumed.add(index);
+			consumed.add(index + 1);
+		}
+	}
 	const positional = argv.filter((arg, i) => {
+		if (consumed.has(i)) return false;
 		if (arg.startsWith('--')) return false;
-		if (slugIndex !== -1 && i === slugIndex + 1) return false;
 		return true;
 	});
-	return { force, slug, inputPath: positional[0] };
+	return { force, ...values, inputPath: positional[0] };
 }
 
 export function fail(message) {
@@ -103,6 +113,60 @@ export function wordCount(body) {
 	const stripped = body.replace(/```[\s\S]*?```/g, ' ');
 	const words = stripped.trim().match(/\S+/g);
 	return words ? words.length : 0;
+}
+
+const HR_PATTERN = /^ {0,3}(-{3,}|\*{3,}|_{3,})\s*$/;
+const H2_PATTERN = /^##(?!#)\s+/;
+const TOC_HEADING_PATTERN = /^##(?!#)\s*table of contents\s*$/i;
+const ANCHOR_LIST_ITEM_PATTERN = /^\s*(?:\d+[.)]|[-*+])\s+\[.+\]\(#.+\)\s*$/;
+
+// Detects a "## Table of contents" heading followed by a list of anchor links,
+// and removes it through to the next h2 (excluded — real content) or the next
+// horizontal rule (included — treated as the section's own closing delimiter).
+// Deterministic; a no-op (returns the body unchanged) when no such section exists,
+// or when the heading isn't actually followed by an anchor-link list.
+export function stripTableOfContents(body) {
+	const lines = body.split('\n');
+	const headingIndex = lines.findIndex((line) => TOC_HEADING_PATTERN.test(line.trim()));
+	if (headingIndex === -1) {
+		return { body, removed: null };
+	}
+
+	let firstItemIndex = headingIndex + 1;
+	while (firstItemIndex < lines.length && lines[firstItemIndex].trim() === '') {
+		firstItemIndex++;
+	}
+	if (firstItemIndex >= lines.length || !ANCHOR_LIST_ITEM_PATTERN.test(lines[firstItemIndex])) {
+		return { body, removed: null };
+	}
+
+	let end = lines.length;
+	let consumedTrailingRule = false;
+	for (let i = firstItemIndex; i < lines.length; i++) {
+		if (H2_PATTERN.test(lines[i])) {
+			end = i;
+			break;
+		}
+		if (HR_PATTERN.test(lines[i])) {
+			end = i + 1;
+			consumedTrailingRule = true;
+			break;
+		}
+	}
+
+	const removedLines = lines.slice(headingIndex, end);
+	const remainingBody = [...lines.slice(0, headingIndex), ...lines.slice(end)]
+		.join('\n')
+		.replace(/\n{3,}/g, '\n\n');
+
+	return {
+		body: remainingBody,
+		removed: {
+			text: removedLines.join('\n').trim(),
+			itemCount: removedLines.filter((l) => ANCHOR_LIST_ITEM_PATTERN.test(l)).length,
+			consumedTrailingRule,
+		},
+	};
 }
 
 export function printValidationErrors(filename, issues) {
