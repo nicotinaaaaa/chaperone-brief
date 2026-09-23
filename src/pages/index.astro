@@ -2,21 +2,16 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ContentCard from '../components/ContentCard.astro';
-import { briefToFeedItem, reviewToFeedItem, newsToFeedItem, byDateDesc, prodFilter } from '../lib/feed';
+import { briefToFeedItem, reviewToFeedItem, byDateDesc, prodFilter } from '../lib/feed';
 
-const [briefs, reviews, news] = await Promise.all([
+const [briefs, reviews] = await Promise.all([
 	getCollection('briefs', prodFilter),
 	getCollection('reviews', prodFilter),
-	getCollection('news'),
 ]);
 
 const briefItems = briefs.map(briefToFeedItem).sort(byDateDesc);
 const hero = briefItems[0];
-const rest = [
-	...briefItems.slice(1),
-	...reviews.map(reviewToFeedItem),
-	...news.map(newsToFeedItem),
-].sort(byDateDesc);
+const rest = [...briefItems.slice(1), ...reviews.map(reviewToFeedItem)].sort(byDateDesc);
 
 const dateFmt = new Intl.DateTimeFormat('en-US', { dateStyle: 'long' });
 ---

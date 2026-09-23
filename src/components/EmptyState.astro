@@ -1,0 +1,40 @@
+---
+import { scheduleTasks, nextRun } from '../data/schedule';
+
+interface Props {
+	taskSlug: string;
+}
+
+const { taskSlug } = Astro.props;
+const task = scheduleTasks.find((t) => t.slug === taskSlug);
+const dateFmt = new Intl.DateTimeFormat('en-US', { dateStyle: 'long' });
+---
+
+<p class="empty-state">
+	{
+		task ? (
+			task.active ? (
+				<>
+					Nothing published here yet — {task.name} publishes {task.cadenceLabel}. Next one's due{' '}
+					<time datetime={nextRun(task.cadence).toISOString()}>{dateFmt.format(nextRun(task.cadence))}</time>.
+				</>
+			) : (
+				<>Nothing published here yet — {task.name} isn't running yet.</>
+			)
+		) : (
+			<>Nothing published here yet.</>
+		)
+	}
+</p>
+
+<style>
+	.empty-state {
+		padding: 1.5rem;
+		border: 1px dashed var(--color-border);
+		border-radius: 0.5rem;
+		color: var(--color-text-muted);
+		font-family: var(--font-sans);
+		font-size: 0.95rem;
+		line-height: 1.6;
+	}
+</style>

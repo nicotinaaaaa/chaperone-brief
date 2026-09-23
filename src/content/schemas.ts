@@ -33,15 +33,5 @@ export const reviewsSchema = z.object({
 	draft: z.boolean().default(false),
 });
 
-export const newsSchema = z.object({
-	title: z.string(),
-	date: z.coerce.date(),
-	summary: z.string(),
-	link: z.url(),
-	source: z.string(),
-	tags: z.array(z.string()).default([]),
-});
-
 export type BriefData = z.infer<typeof briefsSchema>;
 export type ReviewData = z.infer<typeof reviewsSchema>;
-export type NewsData = z.infer<typeof newsSchema>;

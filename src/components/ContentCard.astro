@@ -1,12 +1,10 @@
 ---
 export interface FeedItem {
-	type: 'brief' | 'review' | 'news';
+	type: 'brief' | 'review';
 	title: string;
 	summary: string;
 	date: Date;
 	href: string;
-	/** news only — the title links out here; href above becomes the permalink */
-	externalHref?: string;
 }
 
 interface Props {
@@ -14,7 +12,7 @@ interface Props {
 }
 
 const { item } = Astro.props;
-const typeLabel = { brief: 'Brief', review: 'Review', news: 'News' }[item.type];
+const typeLabel = { brief: 'Brief', review: 'Review' }[item.type];
 const dateFmt = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' });
 ---
 
@@ -24,23 +22,7 @@ const dateFmt = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' });
 		<time datetime={item.date.toISOString()}>{dateFmt.format(item.date)}</time>
 	</div>
 	<h3 class="content-card-title">
-		{
-			item.externalHref ? (
-				<>
-					<a href={item.externalHref} target="_blank" rel="noopener noreferrer" data-external>
-						{item.title}
-					</a>
-					<a href={item.href} class="content-card-permalink" aria-label={`Permalink to ${item.title}`}>
-						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-							<path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07L11.5 4.5" />
-							<path d="M14 11a5 5 0 0 0-7.07 0l-2.83 2.83a5 5 0 0 0 7.07 7.07L12.5 19.5" />
-						</svg>
-					</a>
-				</>
-			) : (
-				<a href={item.href}>{item.title}</a>
-			)
-		}
+		<a href={item.href}>{item.title}</a>
 	</h3>
 	<p class="content-card-summary">{item.summary}</p>
 </article>
@@ -79,23 +61,15 @@ const dateFmt = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' });
 		font-family: var(--font-sans);
 		font-size: 1.15rem;
 		font-weight: 600;
-		display: flex;
-		align-items: baseline;
-		gap: 0.5rem;
 		color: var(--color-text);
 	}
 
-	.content-card-title a:first-child {
+	.content-card-title a {
 		color: inherit;
 	}
 
 	.content-card-title a:hover {
 		color: var(--color-accent-strong);
-	}
-
-	.content-card-permalink {
-		color: var(--color-text-muted);
-		flex-shrink: 0;
 	}
 
 	.content-card-summary {

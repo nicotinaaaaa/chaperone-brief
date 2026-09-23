@@ -1,6 +1,6 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { briefsSchema, reviewsSchema, newsSchema } from './content/schemas';
+import { briefsSchema, reviewsSchema } from './content/schemas';
 
 const briefs = defineCollection({
 	loader: glob({ pattern: '**/*.md', base: './src/content/briefs' }),
@@ -12,9 +12,4 @@ const reviews = defineCollection({
 	schema: reviewsSchema,
 });
 
-const news = defineCollection({
-	loader: glob({ pattern: '**/*.md', base: './src/content/news' }),
-	schema: newsSchema,
-});
-
-export const collections = { briefs, reviews, news };
+export const collections = { briefs, reviews };

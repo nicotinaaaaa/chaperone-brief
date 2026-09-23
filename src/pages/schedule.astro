@@ -2,7 +2,20 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { scheduleTasks, nextRun } from '../data/schedule';
 
-const dateFmt = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' });
+function formatNextRun(date: Date, timeZone: string): string {
+	// dateStyle/timeStyle can't be combined with component options like
+	// timeZoneName (Intl.DateTimeFormat rejects the mix) — spelled out
+	// individually instead.
+	return new Intl.DateTimeFormat('en-US', {
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric',
+		hour: 'numeric',
+		minute: '2-digit',
+		timeZoneName: 'short',
+		timeZone,
+	}).format(date);
+}
 ---
 
 <BaseLayout title="Schedule" description="What publishes automatically on this site, and how often.">
@@ -49,7 +62,7 @@ const dateFmt = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyl
 								</dt>
 								<dd>
 									<time datetime={nextRun(task.cadence).toISOString()}>
-										{dateFmt.format(nextRun(task.cadence))} UTC
+										{formatNextRun(nextRun(task.cadence), task.cadence.timeZone)}
 									</time>
 								</dd>
 							</div>

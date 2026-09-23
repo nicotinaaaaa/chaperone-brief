@@ -2,32 +2,29 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ContentCard from '../../components/ContentCard.astro';
-import { briefToFeedItem, reviewToFeedItem, newsToFeedItem, byDateDesc, prodFilter } from '../../lib/feed';
+import { briefToFeedItem, reviewToFeedItem, byDateDesc, prodFilter } from '../../lib/feed';
 
 export async function getStaticPaths() {
-	const [briefs, reviews, news] = await Promise.all([
+	const [briefs, reviews] = await Promise.all([
 		getCollection('briefs', prodFilter),
 		getCollection('reviews', prodFilter),
-		getCollection('news'),
 	]);
 	const tags = new Set<string>();
-	for (const entry of [...briefs, ...reviews, ...news]) {
+	for (const entry of [...briefs, ...reviews]) {
 		for (const tag of entry.data.tags) tags.add(tag);
 	}
 	return Array.from(tags).map((tag) => ({ params: { tag } }));
 }
 
 const { tag } = Astro.params;
-const [briefs, reviews, news] = await Promise.all([
+const [briefs, reviews] = await Promise.all([
 	getCollection('briefs', prodFilter),
 	getCollection('reviews', prodFilter),
-	getCollection('news'),
 ]);
 
 const items = [
 	...briefs.filter((e) => e.data.tags.includes(tag!)).map(briefToFeedItem),
 	...reviews.filter((e) => e.data.tags.includes(tag!)).map(reviewToFeedItem),
-	...news.filter((e) => e.data.tags.includes(tag!)).map(newsToFeedItem),
 ].sort(byDateDesc);
 ---
 

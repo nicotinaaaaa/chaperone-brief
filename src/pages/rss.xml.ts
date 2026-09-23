@@ -16,10 +16,9 @@ function stripFigureImages(html: string): string {
 export async function GET(context: APIContext) {
 	const container = await AstroContainer.create();
 
-	const [briefs, reviews, news] = await Promise.all([
+	const [briefs, reviews] = await Promise.all([
 		getCollection('briefs', prodFilter),
 		getCollection('reviews', prodFilter),
-		getCollection('news'),
 	]);
 
 	const briefItems: RSSFeedItem[] = await Promise.all(
@@ -52,16 +51,7 @@ export async function GET(context: APIContext) {
 		}),
 	);
 
-	const newsItems: RSSFeedItem[] = news.map((entry) => ({
-		title: entry.data.title,
-		description: entry.data.summary,
-		pubDate: entry.data.date,
-		link: `/news/${entry.id}/`,
-		categories: entry.data.tags,
-		content: `<p>${entry.data.summary}</p><p><a href="${entry.data.link}">Read at ${entry.data.source}</a></p>`,
-	}));
-
-	const items = [...briefItems, ...reviewItems, ...newsItems].sort(
+	const items = [...briefItems, ...reviewItems].sort(
 		(a, b) => (b.pubDate?.valueOf() ?? 0) - (a.pubDate?.valueOf() ?? 0),
 	);
 

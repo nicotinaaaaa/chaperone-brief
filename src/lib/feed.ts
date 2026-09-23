@@ -21,17 +21,6 @@ export function reviewToFeedItem(entry: CollectionEntry<'reviews'>): FeedItem {
 	};
 }
 
-export function newsToFeedItem(entry: CollectionEntry<'news'>): FeedItem {
-	return {
-		type: 'news',
-		title: entry.data.title,
-		summary: entry.data.summary,
-		date: entry.data.date,
-		href: `/news/${entry.id}`,
-		externalHref: entry.data.link,
-	};
-}
-
 export function byDateDesc(a: FeedItem, b: FeedItem): number {
 	return b.date.valueOf() - a.date.valueOf();
 }

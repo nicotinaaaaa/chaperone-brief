@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ContentCard from '../../components/ContentCard.astro';
+import EmptyState from '../../components/EmptyState.astro';
 import { reviewToFeedItem, byDateDesc, prodFilter } from '../../lib/feed';
 
 const reviews = await getCollection('reviews', prodFilter);
@@ -29,6 +30,6 @@ const subfields = [...new Set(reviews.map((r) => r.data.subfield).filter((s): s 
 	}
 
 	<div class="mt-8">
-		{items.length > 0 ? items.map((item) => <ContentCard item={item} />) : <p>No reviews published yet.</p>}
+		{items.length > 0 ? items.map((item) => <ContentCard item={item} />) : <EmptyState taskSlug="bio-science-review" />}
 	</div>
 </BaseLayout>

@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ContentCard from '../../components/ContentCard.astro';
+import EmptyState from '../../components/EmptyState.astro';
 import { briefToFeedItem, byDateDesc, prodFilter } from '../../lib/feed';
 
 const briefs = await getCollection('briefs', prodFilter);
@@ -35,7 +36,9 @@ for (const item of items) {
 				</section>
 			))
 		) : (
-			<p class="mt-8">No briefs published yet.</p>
+			<div class="mt-8">
+				<EmptyState taskSlug="science-biotech-brief" />
+			</div>
 		)
 	}
 </BaseLayout>

@@ -7,7 +7,7 @@ description: 'What Chaperone is and how it gets written.'
 # About
 
 Chaperone is a small, static site for science and biotech writing. It publishes
-three kinds of content:
+two kinds of content:
 
 - **Briefs** — a weekly digest of biology, biotech, and pharma news: regulatory
   decisions, clinical trial results, deals, and basic-science findings, with
@@ -15,8 +15,6 @@ three kinds of content:
 - **Reviews** — longer, standalone pieces. Some are deep literature reviews on
   one specific topic in the biological sciences, with a full reference list and
   a downloadable Word document; others are shorter primers or essays.
-- **News** — short link-posts: one item, a couple of sentences, and a link to
-  the source.
 
 Most of what appears here is written by an automated process on a fixed
 schedule — see [/schedule](/schedule) for exactly what runs and when. Nothing
