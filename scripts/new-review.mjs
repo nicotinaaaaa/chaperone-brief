@@ -10,6 +10,7 @@ import {
 	deriveTitleFromH1,
 	deriveSummary,
 	wordCount,
+	stripLeadingHeading,
 	toDateOnly,
 	printValidationErrors,
 } from './lib/ingest-helpers.mjs';
@@ -104,12 +105,22 @@ if (resolvedDocx) {
 	data.docxPath = `/downloads/${slug}.docx`;
 }
 
+const headingResult = stripLeadingHeading(body, data.title);
+if (headingResult.removed && !headingResult.removed.matchesTitle) {
+	console.error(
+		`⚠ WARNING: the body's leading heading ("${headingResult.removed.text}") does not match ` +
+			`the frontmatter title ("${data.title}"). Stripping it anyway, but this usually means ` +
+			`something upstream picked a different title than the review itself — check the source.`,
+	);
+}
+const bodyAfterHeading = headingResult.removed ? headingResult.body : body;
+
 // Rewrite relative image paths to where they'll actually be served from, and
 // fail if the markdown references a figure that --figures didn't provide.
-let finalBody = body;
+let finalBody = bodyAfterHeading;
 if (resolvedFigures) {
 	const missing = [];
-	finalBody = body.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, src) => {
+	finalBody = bodyAfterHeading.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, src) => {
 		if (/^([a-z]+:)?\/\//i.test(src) || src.startsWith('/')) {
 			return match; // external or already absolute — leave untouched
 		}
@@ -176,6 +187,13 @@ if (figuresDestDir) {
 	console.log(
 		`✓ Copied figures to ${path.relative(process.cwd(), figuresDestDir)} and rewrote their image paths in the body`,
 	);
+}
+if (headingResult.removed) {
+	console.log(
+		`Removed leading heading "${headingResult.removed.text}" (${headingResult.removed.matchesTitle ? 'matched the title' : 'did NOT match the title — see warning above'}) — the page template renders the title itself.`,
+	);
+} else {
+	console.log('No leading heading found to remove.');
 }
 if (guesses.length > 0) {
 	console.log('Guessed:');

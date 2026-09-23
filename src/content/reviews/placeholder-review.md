@@ -26,9 +26,6 @@ sources:
 docxPath: /downloads/placeholder-review.docx
 draft: false
 ---
-
-# Regulatory T cells in tumour immune evasion: a 2026 update
-
 ## Background
 
 Regulatory T cells (Tregs) are a subset of CD4+ T cells that suppress immune responses.

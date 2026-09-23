@@ -14,6 +14,11 @@
 	--color-border: #e6e2da;
 	--color-accent: #2a6f6a;
 	--color-accent-strong: #1f5551;
+	/* Text sitting on top of --color-accent. White on the light-mode accent
+	   is fine (5.87:1); dark mode brightens the accent for its own contrast
+	   against a dark page, which flips what reads on top of it — reuse
+	   --color-bg's dark tone there instead of introducing a new colour. */
+	--color-on-accent: #ffffff;
 }
 
 /* OS-level dark mode, unless a manual override is set. */
@@ -27,6 +32,7 @@
 		--color-border: #2d3134;
 		--color-accent: #5fbdb3;
 		--color-accent-strong: #7fd0c7;
+		--color-on-accent: #16181a;
 	}
 }
 
@@ -40,6 +46,7 @@
 	--color-border: #2d3134;
 	--color-accent: #5fbdb3;
 	--color-accent-strong: #7fd0c7;
+	--color-on-accent: #16181a;
 }
 
 html {
@@ -56,6 +63,25 @@ body {
 	background-color: var(--color-bg);
 	color: var(--color-text);
 	font-family: var(--font-sans);
+}
+
+/* Visually hidden until focused — the first Tab stop on every page. */
+.skip-link {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+	z-index: 100;
+	padding: 0.6rem 1rem;
+	background: var(--color-accent);
+	color: var(--color-on-accent);
+	border-radius: 0 0 0.5rem 0.5rem;
+	font-family: var(--font-sans);
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.skip-link:focus {
+	left: 1rem;
 }
 
 .prose :where(h2, h3, h4) {
@@ -160,7 +186,9 @@ button:focus-visible,
 	margin-top: 0.2em;
 	font-size: 0.9em;
 	color: var(--color-text-muted);
-	opacity: 0.85;
+	/* 0.85 read as 4.03:1 in light mode, just under AA's 4.5:1 for this
+	   text size. 0.91 is the minimum that clears it in both themes. */
+	opacity: 0.91;
 }
 
 /* Fallback only: an italic-only paragraph after an image/table that never
@@ -204,6 +232,11 @@ button:focus-visible,
 	text-underline-offset: 2px;
 }
 
+/* Dev-only (drafts never reach a production build), but still needs to be
+   legible daily. The previous version blended a low-opacity amber over the
+   page background, which read at 2.51:1 in light mode and 4.24:1 in dark —
+   both under the 4.5:1 this text needs. Solid, theme-appropriate amber
+   tones instead of another opacity blend. */
 .draft-badge {
 	display: inline-block;
 	padding: 0.2rem 0.6rem;
@@ -211,9 +244,23 @@ button:focus-visible,
 	font-family: var(--font-sans);
 	font-size: 0.75rem;
 	font-weight: 600;
-	background: color-mix(in srgb, #d97706 20%, transparent);
-	color: #d97706;
-	border: 1px solid color-mix(in srgb, #d97706 40%, transparent);
+	background: #fef3c7;
+	color: #92400e;
+	border: 1px solid #fcd34d;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) .draft-badge {
+		background: #451a03;
+		color: #fbbf24;
+		border-color: #92400e;
+	}
+}
+
+:root[data-theme="dark"] .draft-badge {
+	background: #451a03;
+	color: #fbbf24;
+	border-color: #92400e;
 }
 
 .tag-pill {
@@ -242,7 +289,7 @@ button:focus-visible,
 	padding: 0.6rem 1rem;
 	border-radius: 0.5rem;
 	background: var(--color-accent);
-	color: white;
+	color: var(--color-on-accent);
 }
 
 .download-link:hover {

@@ -11,6 +11,7 @@ import {
 	deriveCoverageWindow,
 	countTopLevelItems,
 	stripTableOfContents,
+	stripLeadingHeading,
 	toDateOnly,
 	printValidationErrors,
 } from './lib/ingest-helpers.mjs';
@@ -81,8 +82,18 @@ data.draft ??= false;
 const itemCount = countTopLevelItems(body);
 data.itemCount = itemCount;
 
-const tocResult = stripTableOfContents(body);
-const finalBody = tocResult.removed ? tocResult.body : body;
+const headingResult = stripLeadingHeading(body, data.title);
+if (headingResult.removed && !headingResult.removed.matchesTitle) {
+	console.error(
+		`⚠ WARNING: the body's leading heading ("${headingResult.removed.text}") does not match ` +
+			`the frontmatter title ("${data.title}"). Stripping it anyway, but this usually means ` +
+			`something upstream picked a different title than the brief itself — check the source.`,
+	);
+}
+const bodyAfterHeading = headingResult.removed ? headingResult.body : body;
+
+const tocResult = stripTableOfContents(bodyAfterHeading);
+const finalBody = tocResult.removed ? tocResult.body : bodyAfterHeading;
 
 const result = briefsSchema.safeParse(data);
 if (!result.success) {
@@ -116,6 +127,13 @@ if (guesses.length > 0) {
 	console.log('All frontmatter was present and valid — nothing guessed.');
 }
 console.log(`itemCount: ${itemCount} (### headings)`);
+if (headingResult.removed) {
+	console.log(
+		`Removed leading heading "${headingResult.removed.text}" (${headingResult.removed.matchesTitle ? 'matched the title' : 'did NOT match the title — see warning above'}) — the page template renders the title itself.`,
+	);
+} else {
+	console.log('No leading heading found to remove.');
+}
 if (tocResult.removed) {
 	const { text, itemCount: tocItemCount, consumedTrailingRule } = tocResult.removed;
 	console.log(

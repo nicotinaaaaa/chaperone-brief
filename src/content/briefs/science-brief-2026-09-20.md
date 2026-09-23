@@ -19,9 +19,6 @@ tags:
 itemCount: 33
 draft: false
 ---
-
-# Science & Biotech Brief — 20 September 2026
-
 **Coverage window:** roughly 6–20 September 2026, with a few late-August items included where September coverage added new information.
 
 **How to read this brief:** every disease, drug type, and technical term is explained in plain English at first use. Each item is tagged with its **maturity stage** — *basic science*, *preclinical* (animals or cells only), *clinical* (tested in humans), *regulatory* (a government decision), or *market* (a business or stock event).

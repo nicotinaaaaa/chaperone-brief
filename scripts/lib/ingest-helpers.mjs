@@ -47,6 +47,34 @@ export function deriveTitleFromH1(body) {
 	return match ? match[1].trim() : undefined;
 }
 
+// Once frontmatter carries a title (original or just derived from this same
+// heading), a leading "# Heading" in the body renders as a second, duplicate
+// <h1> alongside the page template's own title. Strips it; a no-op if the
+// body doesn't start with an h1, or if there's no title to compare against.
+// Deterministic, same shape as stripTableOfContents.
+export function stripLeadingHeading(body, title) {
+	if (!title) return { body, removed: null };
+
+	const lines = body.split('\n');
+	let i = 0;
+	while (i < lines.length && lines[i].trim() === '') i++;
+	if (i >= lines.length || !/^#(?!#)\s+.+$/.test(lines[i])) {
+		return { body, removed: null };
+	}
+
+	const headingText = lines[i].replace(/^#\s+/, '').trim();
+	let end = i + 1;
+	while (end < lines.length && lines[end].trim() === '') end++;
+
+	return {
+		body: lines.slice(end).join('\n'),
+		removed: {
+			text: headingText,
+			matchesTitle: headingText === String(title).trim(),
+		},
+	};
+}
+
 function stripInlineMarkdown(text) {
 	return text
 		.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
