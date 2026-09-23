@@ -1,0 +1,39 @@
+---
+import '../styles/global.css';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const { title, description = SITE_DESCRIPTION } = Astro.props;
+const pageTitle = title ? `${title} — ${SITE_TITLE}` : SITE_TITLE;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{pageTitle}</title>
+		<meta name="description" content={description} />
+	</head>
+	<body class="min-h-screen bg-white text-neutral-900 antialiased">
+		<header class="border-b border-neutral-200">
+			<div class="mx-auto max-w-3xl px-4 py-4">
+				<a href="/" class="font-semibold">{SITE_TITLE}</a>
+			</div>
+		</header>
+		<main class="mx-auto max-w-3xl px-4 py-10">
+			<slot />
+		</main>
+		<footer class="mt-16 border-t border-neutral-200">
+			<div class="mx-auto max-w-3xl px-4 py-6 text-sm text-neutral-500">
+				{SITE_TITLE} — phase 1 scaffold, design pass comes next
+			</div>
+		</footer>
+	</body>
+</html>
