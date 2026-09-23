@@ -134,19 +134,20 @@ and shared between the Astro build and the ingest scripts.
   (`src/layouts/BaseLayout.astro`). The OG image is one static file,
   `public/og-image.png` (1200×630) — there's no per-page or dynamic image
   generation.
-- **`astro.config.mjs`'s `site` is still a placeholder**
-  (`https://chaperone.example`, the IANA-reserved non-resolving TLD) — it
-  feeds the canonical URLs, RSS links, and sitemap. This is enforced, not
-  just documented: `npm run build` refuses to build while `site` contains
-  `"example"` or is unset (`astro.config.mjs` checks for the literal `build`
-  command and throws before Astro even loads the rest of the config). `npm
-  run dev` only warns, so local work isn't blocked.
+- **`astro.config.mjs`'s `site` must match the Netlify site name exactly.**
+  It's set to `https://chaperone-brief.netlify.app` — that only resolves if
+  the Netlify site is named exactly `chaperone-brief` (Site settings → Site
+  details → Change site name, or set it at creation). Get that wrong and the
+  canonical URLs, RSS links, and sitemap all point at a `*.netlify.app`
+  address that doesn't exist. `npm run build` still refuses to build if
+  `site` is ever unset or reverted to a value containing `"example"` (the
+  placeholder used before this was live) — `astro.config.mjs` checks for the
+  literal `build` command and throws before Astro loads the rest of the
+  config. `npm run dev` only warns, so local work is never blocked.
 
-  In phase 4a, `site` gets set to whatever `*.netlify.app` URL Netlify
-  assigns on first deploy — no domain purchase needed for that. If a custom
-  domain gets added later, updating to it is two changes, not one: this one
-  line in `astro.config.mjs`, plus pointing the domain's DNS at Netlify (in
-  Netlify's own domain settings, not part of this repo).
+  If a custom domain gets added later, updating to it is two changes, not
+  one: this line in `astro.config.mjs`, plus pointing the domain's DNS at
+  Netlify (in Netlify's own domain settings, not part of this repo).
 
 ## Project structure
 

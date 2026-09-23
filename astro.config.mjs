@@ -6,9 +6,11 @@ import { unified } from '@astrojs/markdown-remark';
 import sitemap from '@astrojs/sitemap';
 import rehypeCaptions from './src/lib/rehype-captions.ts';
 
-// TODO: replace with the real domain once it's live (phase 4a) — this
-// placeholder uses the IANA-reserved .example TLD so it can never resolve.
-const SITE_URL = 'https://chaperone.example';
+// Netlify site name is "chaperone-brief" — this must match exactly what's
+// entered in Netlify's UI, or the feed, sitemap, and canonical URLs all
+// point at a site that doesn't exist. If a custom domain replaces this
+// later, update it here too (see README).
+const SITE_URL = 'https://chaperone-brief.netlify.app';
 
 const isPlaceholderSite = !SITE_URL || SITE_URL.includes('example');
 const isBuildCommand = process.argv.includes('build');
