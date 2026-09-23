@@ -136,9 +136,17 @@ and shared between the Astro build and the ingest scripts.
   generation.
 - **`astro.config.mjs`'s `site` is still a placeholder**
   (`https://chaperone.example`, the IANA-reserved non-resolving TLD) — it
-  feeds the canonical URLs, RSS links, and sitemap. Update it to the real
-  domain once Netlify (or a custom domain) is live, or all three will point
-  at a fake address.
+  feeds the canonical URLs, RSS links, and sitemap. This is enforced, not
+  just documented: `npm run build` refuses to build while `site` contains
+  `"example"` or is unset (`astro.config.mjs` checks for the literal `build`
+  command and throws before Astro even loads the rest of the config). `npm
+  run dev` only warns, so local work isn't blocked.
+
+  In phase 4a, `site` gets set to whatever `*.netlify.app` URL Netlify
+  assigns on first deploy — no domain purchase needed for that. If a custom
+  domain gets added later, updating to it is two changes, not one: this one
+  line in `astro.config.mjs`, plus pointing the domain's DNS at Netlify (in
+  Netlify's own domain settings, not part of this repo).
 
 ## Project structure
 
