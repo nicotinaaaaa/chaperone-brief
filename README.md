@@ -22,13 +22,21 @@ is published as-is), then gets processed by an ingest script into
 
 ```bash
 node scripts/new-brief.mjs inbox/science-brief-2026-09-27.md
+node scripts/new-brief.mjs inbox/some-directory-of-briefs/   # batch mode
 node scripts/new-review.mjs inbox/some-review.md
 ```
 
 Each script validates or derives whatever frontmatter is missing, refuses to
 guess fields that could genuinely be wrong instead of missing, fails loudly
 (nothing written) on a schema violation naming the exact field, and never
-overwrites an existing file without `--force`.
+overwrites an existing file without `--force`. `new-brief.mjs` also takes a
+directory: it ingests every `.md` file in it, isolating and reporting one bad
+file rather than aborting the batch, and prints a summary table at the end.
+
+A review that starts as a `.docx` goes through `scripts/docx-to-md.mjs`
+first, which converts it to a draft markdown stub in `inbox/` (installing
+[pandoc](https://pandoc.org) user-space if needed) with images extracted and
+`summary`/`subfield`/`sources` left as `TODO` markers to fill in by hand.
 
 **See [CONTENT.md](CONTENT.md)** for the full frontmatter reference and a
 copy-pasteable template for each content type, every ingest script flag
@@ -78,7 +86,7 @@ src/
   pages/
   styles/
 scripts/
-  new-brief.mjs new-review.mjs
+  new-brief.mjs new-review.mjs docx-to-md.mjs
   lib/ingest-helpers.mjs
 inbox/                 # staging area for raw content — see inbox/README.md
 .github/workflows/     # CI: astro check + npm run build on every PR and push to main

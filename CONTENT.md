@@ -154,6 +154,7 @@ is published as-is), then an ingest script validates it into
 
 ```bash
 node scripts/new-brief.mjs inbox/science-brief-2026-09-27.md [--force]
+node scripts/new-brief.mjs inbox/some-directory/ [--force]   # batch mode
 
 node scripts/new-review.mjs inbox/some-review.md \
   [--slug custom-slug] [--docx inbox/some-review.docx] \
@@ -170,11 +171,55 @@ node scripts/new-review.mjs inbox/some-review.md \
 Every script:
 - Validates existing frontmatter, or derives whatever's missing (title from
   the first `#` heading, summary from a "Top takeaways" section or the first
-  paragraph, a brief's coverage window from a "Coverage window:" line) and
-  prints exactly what it guessed.
-- Fails loudly (non-zero exit, nothing written) on a schema violation, naming
-  the exact field.
+  paragraph, a brief's coverage window from a "Coverage window:" or "Period
+  covered:" line, in either strict `YYYY-MM-DD` or human-readable form like
+  "August 16–30, 2026" or "6–20 September 2026") and prints exactly what it
+  guessed.
+- Fails loudly (non-zero exit, nothing written for that file) on a schema
+  violation, naming the exact field.
 - Never overwrites an existing file without `--force`.
+
+**Batch mode** (`new-brief.mjs` only, for now): pass a directory instead of a
+file and it ingests every `.md` in it, printing a summary table (filename,
+title, date, item count, what got guessed) at the end. One malformed file
+fails and is reported — with the same detail as single-file mode — but
+doesn't stop the rest of the batch; the whole run exits non-zero if anything
+failed, so it's still safe to script around.
+
+### Converting a `.docx` review
+
+```bash
+node scripts/docx-to-md.mjs inbox/some-review.docx [--force]
+```
+
+Installs [pandoc](https://pandoc.org) user-space to `~/.local` if it isn't
+already on `PATH` (no sudo), then converts to markdown and writes a **draft
+stub**, not a publishable file:
+
+- `title` — from the first `#` heading if the source has one; otherwise a
+  `TODO —` placeholder built from the filename, since guessing a title from
+  body text (bold pseudo-headings, category labels, etc.) is exactly the
+  kind of thing that can be confidently wrong rather than absent.
+- `date` — from the `.docx` file's modified time.
+- `summary`, `tags`, `subfield`, `sources` — left as visible `TODO —` markers
+  (as YAML comments/placeholder strings, not silently omitted) for you to
+  fill in.
+- `draft: true`, so it can't accidentally ship via `new-review.mjs` before
+  the TODOs are addressed.
+- Images — extracted to `inbox/<slug>-figures/image-N.<ext>`, sequentially
+  renamed, and referenced from the markdown as `![TODO alt text](image-N.ext)`
+  regardless of whether pandoc originally emitted markdown or raw HTML `<img>`
+  (pandoc falls back to HTML for any image Word gave explicit dimensions) —
+  so the output is always in the form `new-review.mjs --figures` expects.
+- A report naming what needs manual attention: no real heading structure
+  (common — these source docs often use bold text as pseudo-headings, which
+  means no sticky table of contents until fixed), tables (alignment/merged
+  cells often degrade in conversion), and a references/bibliography section
+  (citation formatting is where conversion degrades most).
+
+Writes only into `inbox/` — never touches `public/figures/` and never
+auto-publishes. Review the stub, fill in the TODOs, restructure headings if
+needed, then run `new-review.mjs` as usual.
 
 `scripts/publish.sh` (once it exists) wraps this: ingest → build → commit →
 push, and is what a scheduled task runs non-interactively.

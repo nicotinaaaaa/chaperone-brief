@@ -124,12 +124,69 @@ export function deriveSummary(body) {
 	return deriveFromTakeaways(lines) ?? deriveFirstParagraph(lines);
 }
 
+const MONTH_NUMBERS = {
+	jan: '01', january: '01',
+	feb: '02', february: '02',
+	mar: '03', march: '03',
+	apr: '04', april: '04',
+	may: '05',
+	jun: '06', june: '06',
+	jul: '07', july: '07',
+	aug: '08', august: '08',
+	sep: '09', sept: '09', september: '09',
+	oct: '10', october: '10',
+	nov: '11', november: '11',
+	dec: '12', december: '12',
+};
+
+const MONTH_PATTERN =
+	'(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept|Sep|Oct|Nov|Dec)\\.?';
+
+// A "Coverage window:"/"Period covered:" line, however it was written:
+// strict ISO ("2026-09-06 to 2026-09-20"), month-first prose ("August
+// 16–30, 2026" or "July 27 – August 9, 2026"), or day-first prose ("roughly
+// 6–20 September 2026"). The label itself may carry markdown emphasis
+// (`**Coverage window:**`) between the colon and the date.
 export function deriveCoverageWindow(body) {
-	const match = body.match(
-		/coverage window:?\s*(\d{4}-\d{2}-\d{2})\s*(?:to|–|—|-)\s*(\d{4}-\d{2}-\d{2})/i,
+	const labelMatch = body.match(/(coverage window|period covered)\s*:?\s*[*_]*\s*/i);
+	if (!labelMatch) return undefined;
+	const rest = body.slice(labelMatch.index + labelMatch[0].length);
+
+	const isoMatch = rest.match(/^(\d{4}-\d{2}-\d{2})\s*(?:to|–|—|-)\s*(\d{4}-\d{2}-\d{2})/i);
+	if (isoMatch) {
+		return { windowStart: isoMatch[1], windowEnd: isoMatch[2] };
+	}
+
+	const monthFirst = new RegExp(
+		`^${MONTH_PATTERN}\\s+(\\d{1,2})\\s*(?:[–—-]\\s*(?:${MONTH_PATTERN}\\s+)?(\\d{1,2}))?,?\\s*(\\d{4})`,
+		'i',
 	);
-	if (!match) return undefined;
-	return { windowStart: match[1], windowEnd: match[2] };
+	const mf = rest.match(monthFirst);
+	if (mf && mf[4]) {
+		const [, month1, day1, month2, day2, year] = mf;
+		const m1 = MONTH_NUMBERS[month1.toLowerCase()];
+		const m2 = month2 ? MONTH_NUMBERS[month2.toLowerCase()] : m1;
+		return {
+			windowStart: `${year}-${m1}-${day1.padStart(2, '0')}`,
+			windowEnd: `${year}-${m2}-${day2.padStart(2, '0')}`,
+		};
+	}
+
+	const dayFirst = new RegExp(
+		`^(?:roughly\\s+)?(\\d{1,2})\\s*[–—-]\\s*(\\d{1,2})\\s+${MONTH_PATTERN}\\s+(\\d{4})`,
+		'i',
+	);
+	const df = rest.match(dayFirst);
+	if (df) {
+		const [, day1, day2, month, year] = df;
+		const m = MONTH_NUMBERS[month.toLowerCase()];
+		return {
+			windowStart: `${year}-${m}-${day1.padStart(2, '0')}`,
+			windowEnd: `${year}-${m}-${day2.padStart(2, '0')}`,
+		};
+	}
+
+	return undefined;
 }
 
 export function countTopLevelItems(body) {
