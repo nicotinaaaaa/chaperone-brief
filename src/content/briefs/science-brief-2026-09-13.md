@@ -1,5 +1,5 @@
 ---
-title: Weekly Science & Biotech Brief
+title: Science & Biotech Brief — 13 September 2026
 date: '2026-09-13'
 windowStart: '2026-08-31'
 windowEnd: '2026-09-13'

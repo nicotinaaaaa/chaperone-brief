@@ -1,5 +1,5 @@
 ---
-title: Weekly Science & Biotech Review
+title: Science & Biotech Brief — 10 August 2026
 date: '2026-08-10'
 windowStart: '2026-07-27'
 windowEnd: '2026-08-09'

@@ -1,5 +1,5 @@
 ---
-title: Weekly Science & Biotech Digest
+title: Science & Biotech Brief — 17 August 2026
 date: '2026-08-17'
 windowStart: '2026-08-03'
 windowEnd: '2026-08-17'
