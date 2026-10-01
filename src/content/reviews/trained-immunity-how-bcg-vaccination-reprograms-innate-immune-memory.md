@@ -171,7 +171,7 @@ sources:
     pmid: 38198850
 docxPath: >-
   /downloads/trained-immunity-how-bcg-vaccination-reprograms-innate-immune-memory.docx
-draft: true
+draft: false
 ---
 *Mechanisms, Clinical Evidence, and the Case for Trained-Immunity-Based Vaccines*
 

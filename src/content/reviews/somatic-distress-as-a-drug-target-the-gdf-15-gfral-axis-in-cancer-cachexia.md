@@ -211,7 +211,7 @@ sources:
     pmid: 33172749
 docxPath: >-
   /downloads/somatic-distress-as-a-drug-target-the-gdf-15-gfral-axis-in-cancer-cachexia.docx
-draft: true
+draft: false
 ---
 *From a divergent TGF-β superfamily cytokine to a brainstem-restricted receptor and the first positive phase 2 trial in cachexia*
 

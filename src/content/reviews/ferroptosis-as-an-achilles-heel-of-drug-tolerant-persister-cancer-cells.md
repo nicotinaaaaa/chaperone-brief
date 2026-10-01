@@ -220,7 +220,7 @@ sources:
     pmid: 42213191
 docxPath: >-
   /downloads/ferroptosis-as-an-achilles-heel-of-drug-tolerant-persister-cancer-cells.docx
-draft: true
+draft: false
 ---
 
 ------------------------------------------------------------------------

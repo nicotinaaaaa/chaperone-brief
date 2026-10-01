@@ -227,7 +227,7 @@ sources:
     pmid: 41529696
 docxPath: >-
   /downloads/organelles-on-the-move-intercellular-mitochondrial-transfer-in-tissue-homeostasis-cancer-and-cell-therapy.docx
-draft: true
+draft: false
 ---
 *A review of mechanisms, pathological consequences and therapeutic exploitation*
 

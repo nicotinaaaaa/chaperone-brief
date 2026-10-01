@@ -232,7 +232,7 @@ sources:
       Alzheimer's disease: a pilot study (DIVA Study)
     url: 'https://clinicaltrials.gov/study/NCT06530732'
 docxPath: /downloads/sleep-dependent-glymphatic-clearance-and-neurodegeneration.docx
-draft: true
+draft: false
 ---
 *Mechanism, Evidence, and a Field-Defining Controversy*
 

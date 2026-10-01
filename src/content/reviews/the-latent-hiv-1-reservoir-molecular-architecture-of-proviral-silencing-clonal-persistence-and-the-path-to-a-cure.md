@@ -275,7 +275,7 @@ sources:
     pmid: 39952916
 docxPath: >-
   /downloads/the-latent-hiv-1-reservoir-molecular-architecture-of-proviral-silencing-clonal-persistence-and-the-path-to-a-cure.docx
-draft: true
+draft: false
 ---
 *A Review of Current Evidence in Virology and Translational HIV Cure Research*
 

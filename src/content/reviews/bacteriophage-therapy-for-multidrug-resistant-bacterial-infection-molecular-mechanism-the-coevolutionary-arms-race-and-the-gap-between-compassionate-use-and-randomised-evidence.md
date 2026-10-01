@@ -247,7 +247,7 @@ sources:
     url: 'https://clinicaltrials.gov/study/NCT05488340'
 docxPath: >-
   /downloads/bacteriophage-therapy-for-multidrug-resistant-bacterial-infection-molecular-mechanism-the-coevolutionary-arms-race-and-the-gap-between-compassionate-use-and-randomised-evidence.docx
-draft: true
+draft: false
 ---
 
 ------------------------------------------------------------------------
