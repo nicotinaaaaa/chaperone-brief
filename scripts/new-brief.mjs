@@ -70,7 +70,7 @@ function ingestOneBriefUnsafe(resolvedInput, filename, { force }) {
 	}
 
 	if (!data.windowStart || !data.windowEnd) {
-		const window = deriveCoverageWindow(body);
+		const window = deriveCoverageWindow(body, data.title);
 		if (window) {
 			data.windowStart ??= window.windowStart;
 			data.windowEnd ??= window.windowEnd;
