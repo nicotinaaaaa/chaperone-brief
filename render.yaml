@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: chaperone-brief
+    runtime: static
+    buildCommand: npm run build
+    staticPublishPath: ./dist
+    envVars:
+      # Pinned for the same reason netlify.toml pins it (see README) — this
+      # happens to match Render's own current default, but pinned explicitly
+      # so a future platform default change can't cause a silent drift.
+      - key: NODE_VERSION
+        value: 24.21.0
