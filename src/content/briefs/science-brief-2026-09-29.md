@@ -4,10 +4,10 @@ date: '2026-09-29'
 windowStart: '2026-09-15'
 windowEnd: '2026-09-29'
 summary: >-
-  This brief covers biology and biotech/pharma news from roughly the past two
-  weeks: new discoveries in the life sciences, clinical trial results and
-  regulatory decisions, and biotech business news. Every disease and technical
-  term is explained the first time it appears — look for the plain-English…
+  Regulatory approvals skewed toward diseases with few or no good treatment
+  options (FOP, a rare bile duct cancer, Sjögren's disease), two drugs posted
+  positive late-stage data in IgA nephropathy within the same two weeks, and
+  safety signals, not just efficacy, moved markets.
 tags: []
 itemCount: 12
 draft: false

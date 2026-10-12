@@ -4,10 +4,9 @@ date: '2026-10-11'
 windowStart: '2026-10-04'
 windowEnd: '2026-10-11'
 summary: >-
-  This brief covers biology, biotech and pharma news from the past week or so.
-  Every disease and technical term is explained at first use. Coverage note:
-  many major trade-press sites block automated access, so this run is shorter
-  than a full sweep. I only include items whose date and details I coul…
+  Western Phase 3 trials are a hard filter for China-originated drugs. A rare
+  "reversal" signal in IPF could reshape a market where current drugs only slow
+  decline — if full data hold up.
 tags: []
 itemCount: 8
 draft: false

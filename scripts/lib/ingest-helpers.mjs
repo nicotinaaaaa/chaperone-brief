@@ -101,19 +101,79 @@ function stripInlineMarkdown(text) {
 
 function clean(text) {
 	const trimmed = stripInlineMarkdown(text).replace(/\s+/g, ' ').trim();
-	return trimmed.length > 300 ? `${trimmed.slice(0, 297).trimEnd()}…` : trimmed;
+	return trimmed.length > SUMMARY_MAX_LENGTH ? `${trimmed.slice(0, SUMMARY_MAX_LENGTH - 3).trimEnd()}…` : trimmed;
 }
 
+const SENTENCE_ABBREVIATIONS = new Set([
+	'et al', 'vs', 'approx', 'fig', 'figs', 'eq', 'etc', 'ca', 'cf', 'e.g', 'i.e', 'no', 'vol', 'pp',
+	'u.s', 'u.k', 'dr', 'mr', 'mrs', 'ms', 'inc', 'corp', 'ltd', 'co',
+]);
+
+// First sentence of already-plain text. A period straight after ")" ends a
+// sentence ("…investigation (B)."); otherwise a lone letter or a known
+// abbreviation is not a sentence end.
+function firstSentence(plain) {
+	const re = /[.!?](?=\s|$)/g;
+	let m;
+	while ((m = re.exec(plain))) {
+		if (plain[m.index - 1] !== ')') {
+			const words = plain.slice(0, m.index).match(/[A-Za-z]+(?:\.[A-Za-z]+)*/g) ?? [];
+			const last = (words[words.length - 1] ?? '').toLowerCase();
+			const lastTwo = words.length >= 2 ? `${words[words.length - 2]} ${words[words.length - 1]}`.toLowerCase() : '';
+			if (last.length === 1 || SENTENCE_ABBREVIATIONS.has(last) || SENTENCE_ABBREVIATIONS.has(lastTwo)) continue;
+		}
+		return plain.slice(0, m.index + 1);
+	}
+	return plain;
+}
+
+const SUMMARY_MAX_LENGTH = 300;
+
+// The entries under "Top takeaways": list items (bulleted or numbered, with
+// their wrapped continuation lines) or, when the section is plain prose, its
+// paragraphs. Stops at the next heading or horizontal rule.
+function takeawayUnits(lines, headingIndex) {
+	const units = [];
+	let current = null;
+	const flush = () => {
+		if (current) units.push(current.join(' '));
+		current = null;
+	};
+	for (let i = headingIndex + 1; i < lines.length; i++) {
+		const line = lines[i];
+		if (/^#{1,6}\s/.test(line) || HR_PATTERN.test(line)) break;
+		if (line.trim() === '') {
+			flush();
+			continue;
+		}
+		const item = line.match(/^\s*(?:[-*+]|\d+[.)])\s+(.+)$/);
+		if (item) {
+			flush();
+			current = [item[1].trim()];
+		} else if (current) {
+			current.push(line.trim());
+		} else {
+			current = [line.trim()];
+		}
+	}
+	flush();
+	return units;
+}
+
+// A summary is "one or two sentences naming the biggest stories", so take the
+// lead sentence of the first takeaway and, if it is short enough to leave
+// room, the lead sentence of the second. A first sentence that alone exceeds
+// the limit is cut with an ellipsis by clean() — never at a clause boundary,
+// which could drop a hedge ("— if full data hold up") and overstate the claim.
 function deriveFromTakeaways(lines) {
 	const headingIndex = lines.findIndex((l) => /^#{2,3}\s*top takeaways\s*$/i.test(l.trim()));
 	if (headingIndex === -1) return undefined;
-	for (let i = headingIndex + 1; i < lines.length; i++) {
-		const line = lines[i];
-		if (/^#{1,6}\s/.test(line)) break;
-		const itemMatch = line.match(/^\s*[-*]\s+(.+)$/);
-		if (itemMatch) return clean(itemMatch[1]);
-	}
-	return undefined;
+	const leads = takeawayUnits(lines, headingIndex)
+		.map((unit) => firstSentence(stripInlineMarkdown(unit).replace(/\s+/g, ' ').trim()))
+		.filter(Boolean);
+	if (leads.length === 0) return undefined;
+	const both = leads.length > 1 ? `${leads[0]} ${leads[1]}` : null;
+	return clean(both && both.length <= SUMMARY_MAX_LENGTH ? both : leads[0]);
 }
 
 function deriveFirstParagraph(lines) {
@@ -303,7 +363,6 @@ export function stripTableOfContents(body) {
 // own caption rather than a placeholder.
 // ---------------------------------------------------------------------------
 
-const CAPTION_ABBREVIATIONS = new Set(['et al', 'vs', 'approx', 'fig', 'figs', 'eq', 'etc', 'ca', 'cf', 'e.g', 'i.e', 'no', 'vol', 'pp']);
 const ALT_MAX_LENGTH = 200;
 
 function parseCaption(raw) {
@@ -343,21 +402,7 @@ function altFromCaptionBody(body) {
 		.replace(/\s+/g, ' ')
 		.replace(/\s+([;,.:])/g, '$1') // gaps left where a citation marker was removed
 		.trim();
-	const re = /[.!?](?=\s|$)/g;
-	let sentence = plain;
-	let m;
-	while ((m = re.exec(plain))) {
-		// A period straight after ")" ends a sentence ("…investigation (B).");
-		// otherwise a lone letter or a known abbreviation is not a sentence end.
-		if (plain[m.index - 1] !== ')') {
-			const words = plain.slice(0, m.index).match(/[A-Za-z]+(?:\.[A-Za-z]+)*/g) ?? [];
-			const last = (words[words.length - 1] ?? '').toLowerCase();
-			const lastTwo = words.length >= 2 ? `${words[words.length - 2]} ${words[words.length - 1]}`.toLowerCase() : '';
-			if (last.length === 1 || CAPTION_ABBREVIATIONS.has(last) || CAPTION_ABBREVIATIONS.has(lastTwo)) continue;
-		}
-		sentence = plain.slice(0, m.index + 1);
-		break;
-	}
+	let sentence = firstSentence(plain);
 	if (sentence.length > ALT_MAX_LENGTH) {
 		// Too long for alt text: a caption's opening clause is its title, and
 		// what trails it is usually provenance ("…, synthesized from X et al.").

@@ -181,8 +181,9 @@ node scripts/new-review.mjs inbox/some-review.md \
 
 Every script:
 - Validates existing frontmatter, or derives whatever's missing (title from
-  the first `#` heading, summary from a "Top takeaways" section or the first
-  paragraph, a brief's coverage window from a "Coverage window:" or "Period
+  the first `#` heading, summary from the lead sentences of the first two
+  items under a "Top takeaways" heading — bulleted, numbered or plain
+  paragraphs — or else the first paragraph, a brief's coverage window from a "Coverage window:" or "Period
   covered:" line, in either strict `YYYY-MM-DD` or human-readable form like
   "August 16–30, 2026" or "6–20 September 2026") and prints exactly what it
   guessed.
