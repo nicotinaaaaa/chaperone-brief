@@ -222,11 +222,6 @@ docxPath: >-
   /downloads/ferroptosis-as-an-achilles-heel-of-drug-tolerant-persister-cancer-cells.docx
 draft: false
 ---
-
-------------------------------------------------------------------------
-
-# Ferroptosis as an Achilles' Heel of Drug-Tolerant Persister Cancer Cells
-
 *Mechanism, redundancy, and therapeutic prospects of the GPX4–FSP1–DHODH–GCH1 surveillance network in non-genetic therapy resistance*
 
 Prepared as an automated weekly literature review · 31 August 2026
@@ -287,7 +282,7 @@ Two further defences complete the network. Mao et al. showed that dihydroorotate
 
 The practical consequence is that a tumour has at least four ways to hold the ferroptotic threshold above the lethal line, distributed across two membranes and drawing on three chemically distinct reductant pools (glutathione, CoQ10H2, BH4). Figure 1 summarises this architecture and Table 1 catalogues the components.
 
-![TODO alt text](/figures/ferroptosis-as-an-achilles-heel-of-drug-tolerant-persister-cancer-cells/image-1.png)
+![Architecture of the ferroptosis execution and surveillance arms.](/figures/ferroptosis-as-an-achilles-heel-of-drug-tolerant-persister-cancer-cells/image-1.png)
 
 **Figure 1.** Architecture of the ferroptosis execution and surveillance arms. The execution arm (left, red) begins with system xc−-dependent cysteine import supporting glutathione synthesis, and with ACSL4/LPCAT3-dependent activation and re-esterification of polyunsaturated fatty acids into membrane phospholipids (PUFA-PL). Labile Fe2+ (Fenton chemistry) and lipoxygenases convert PUFA-PL to phospholipid hydroperoxides (PUFA-PL-OOH), whose accumulation ruptures the membrane. The surveillance arm comprises four partly redundant systems (blunt-ended bars denote suppression): GPX4 reduces PL-OOH using glutathione; FSP1/AIFM2 regenerates plasma-membrane CoQ10H2 as a radical-trapping antioxidant; DHODH performs the equivalent function at the inner mitochondrial membrane; and GCH1-derived BH4/BH2 acts both as an antioxidant and through phospholipid remodelling. Original schematic drawn by the authors from the mechanisms reported in Dixon et al. 2012 \[1\], Yang et al. 2014 \[2\], Doll et al. 2017 \[3\], Doll et al. 2019 \[6\], Bersuker et al. 2019 \[7\], Kraft et al. 2020 \[8\] and Mao et al. 2021 \[13\]; it is not a reproduction of any published figure.
 
@@ -331,7 +326,7 @@ Several of these studies add mechanistic texture. In erlotinib-tolerant head-and
 
 The colorectal and GIST studies are notable for their in vivo endpoints. Zhang et al. generated 5-fluorouracil- and AZ628-tolerant persisters in HCT116 and SW620 cells, found them quiescent, stem-like and mesenchymal with upregulated GPX4 and ferrous iron, and showed that GPX4 inhibition restrained tumour regrowth after anti-cancer drug treatment was discontinued; biopsies from colorectal cancer patients undergoing neoadjuvant chemoradiotherapy showed upregulated GPX4 and ferritin heavy chain 1, and high GPX4 correlated with worse prognosis \[15\]. Ishida et al. reported that imatinib-derived persister GIST cells downregulate glucose metabolism with a consequent fall in glutathione, that RSL3-induced death in these cells is iron-dependent and caspase-independent, and that RSL3 inhibited tumour regrowth after imatinib withdrawal in xenografts and also killed gefitinib-derived persister lung cancer cells \[14\].
 
-![TODO alt text](/figures/ferroptosis-as-an-achilles-heel-of-drug-tolerant-persister-cancer-cells/image-2.png)
+![(A) Conceptual scheduling of ferroptosis induction against the persister reservoir.](/figures/ferroptosis-as-an-achilles-heel-of-drug-tolerant-persister-cancer-cells/image-2.png)
 
 **Figure 2.** (A) Conceptual scheduling of ferroptosis induction against the persister reservoir. Cytotoxic or targeted therapy produces rapid log-kill followed by a residual plateau of drug-tolerant persister cells, from which relapse emerges once drug pressure is relieved (red). Sequential GPX4 inhibition applied to the residual population drives ferroptotic clearance of that reservoir (blue). The curves are illustrative schematics of the strategy validated experimentally in mouse models by Hangauer et al. \[5\], Zhang et al. \[15\] and Ishida et al. \[14\]; they are not fitted to published data and the axes are arbitrary. (B) Cell-state determinants of ferroptotic vulnerability: as cells move along the epithelial-to-high-mesenchymal/DTP axis, apoptotic competence falls while dependency on GPX4 and FSP1 rises, driven by increased ACSL4/LPCAT3-dependent PUFA-phospholipid content, elevated labile iron and reduced glutathione. Schematic synthesis of the relationships reported in refs. \[3,4,5,11,12,14,15,19\].
 

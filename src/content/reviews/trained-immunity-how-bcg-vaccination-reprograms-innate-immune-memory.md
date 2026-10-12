@@ -204,7 +204,7 @@ The chronology below (Table 1), reconstructed from the historical account in Che
 | 2020–2022 | Multiple randomized trials test BCG revaccination against COVID-19 in health-care workers and the elderly; Jeyanathan et al. describe a gut–lung axis for BCG-induced trained alveolar macrophages. |
 | 2024 | Moorlag et al. perform multi-omics profiling of 323 BCG vaccinees, showing that training magnitude depends on an individual's baseline (“dormant”) immune state rather than uniformly boosting immunity. |
 
-*Table 1. Key historical milestones in the discovery of BCG-induced trained immunity, compiled from the timeline presented in Chen et al., J Transl Med 2023 \[1\], supplemented with trial-specific findings from Kaufmann et al. 2018 \[2\], Cirovic et al. 2020 \[4\], and Moorlag et al. 2024 (Immunity) \[15\].*
+**Table 1.** Key historical milestones in the discovery of BCG-induced trained immunity, compiled from the timeline presented in Chen et al., J Transl Med 2023 \[1\], supplemented with trial-specific findings from Kaufmann et al. 2018 \[2\], Cirovic et al. 2020 \[4\], and Moorlag et al. 2024 (Immunity) \[15\].
 
 ## 3. Molecular Mechanisms of BCG-Induced Trained Immunity
 
@@ -224,9 +224,9 @@ Epigenetic remodeling does not occur in isolation: it is tightly coupled to a sh
 
 A key unresolved puzzle was how training could persist for months when mature monocytes survive in circulation for only one to three days. Kaufmann et al. resolved this in a mouse model by showing that BCG reaches the bone marrow directly, where it alters the transcriptional landscape of hematopoietic stem cells (HSCs) and multipotent progenitors (MPPs), biasing hematopoiesis toward myelopoiesis at the expense of lymphopoiesis; macrophages subsequently differentiated from these “educated” HSCs retained epigenetic reprogramming and provided superior protection against virulent Mycobacterium tuberculosis challenge compared with naïve macrophages \[2\]. Cirovic et al. confirmed an analogous process in human BCG vaccinees, identifying the transcription factors HNF1A and HNF1B as key regulators of a persistent myeloid transcriptional program within the HSPC compartment, corroborated by elevated granulocyte counts in BCG-vaccinated infants and by epigenetic remodeling detectable in peripheral CD14+ monocytes three months after vaccination \[4\]. Interestingly, training is not confined to the bone marrow–blood axis: Jeyanathan et al. demonstrated that parenteral (subcutaneous) BCG vaccination also generates long-lived, trained alveolar macrophages in the lung, but through an indirect route — mycobacterial dissemination alters the gut microbiome and circulating metabolites, which in turn reprogram tissue-resident macrophages at the distal mucosal surface (the “gut–lung axis”).
 
-![TODO alt text](/figures/trained-immunity-how-bcg-vaccination-reprograms-innate-immune-memory/image-1.png)
+![Schematic overview of the mechanistic cascade linking BCG exposure to trained innate immune cell function](/figures/trained-immunity-how-bcg-vaccination-reprograms-innate-immune-memory/image-1.png)
 
-*Figure 1. Schematic overview of the mechanistic cascade linking BCG exposure to trained innate immune cell function, synthesized from the mechanisms described in Kleinnijenhuis et al., PNAS 2012 \[7\]; Arts et al., Cell Host Microbe 2018 \[6\]; Kaufmann et al., Cell 2018 \[2\]; Cirovic et al., Cell Host Microbe 2020 \[4\]; and reviewed in Chen et al., J Transl Med 2023 \[1\]. Diagram constructed for this review; it is an original synthesis, not a reproduction of a published figure.*
+**Figure 1.** Schematic overview of the mechanistic cascade linking BCG exposure to trained innate immune cell function, synthesized from the mechanisms described in Kleinnijenhuis et al., PNAS 2012 \[7\]; Arts et al., Cell Host Microbe 2018 \[6\]; Kaufmann et al., Cell 2018 \[2\]; Cirovic et al., Cell Host Microbe 2020 \[4\]; and reviewed in Chen et al., J Transl Med 2023 \[1\]. Diagram constructed for this review; it is an original synthesis, not a reproduction of a published figure.
 
 | **Mechanism** | **Key molecular players** | **Functional readout** | **Primary source** |
 |----|----|----|----|
@@ -236,7 +236,7 @@ A key unresolved puzzle was how training could persist for months when mature mo
 | Central (HSPC) training | HNF1A/HNF1B; myeloid-biased transcriptome | Long-term, self-renewing supply of trained monocytes/granulocytes | Kaufmann et al. 2018 \[2\]; Cirovic et al. 2020 \[4\] |
 | Mucosal/tissue training | Gut microbiome & metabolite shifts | Trained lung-resident alveolar macrophages | Jeyanathan et al. 2022 \[13\] |
 
-*Table 2. Summary of the major molecular mechanisms underlying BCG-induced trained immunity, with the primary literature source for each finding.*
+**Table 2.** Summary of the major molecular mechanisms underlying BCG-induced trained immunity, with the primary literature source for each finding.
 
 ## 4. Cell Types That Exhibit Trained Immunity
 
@@ -254,15 +254,14 @@ The proposed heterologous antiviral effect of BCG motivated a wave of randomized
 
 | **NCT ID** | **Trial** | **Population / design** | **Primary endpoint** | **Status** |
 |----|----|----|----|----|
-| NCT04328441
-(BCG-CORONA) | BCG to reduce COVID-19 absenteeism in health-care workers | 1,511 hospital staff; randomized, placebo-controlled, Phase 3; Netherlands | Days of unplanned absenteeism (any cause) | Completed |
+| NCT04328441 (BCG-CORONA) | BCG to reduce COVID-19 absenteeism in health-care workers | 1,511 hospital staff; randomized, placebo-controlled, Phase 3; Netherlands | Days of unplanned absenteeism (any cause) | Completed |
 | NCT04348370 | BCG vaccination as defense against SARS-CoV-2 in health-care workers | 659 participants; randomized, placebo-controlled, Phase 4; USA | COVID-19 incidence / severity | Completed |
 | NCT04417335 | BCG to reduce hospital admission of the elderly during the pandemic | 2,014 participants; randomized, placebo-controlled, Phase 4; Netherlands | Hospital admission incidence | Status unknown |
 | NCT05507671 | BCG in the clinical course of COVID-19 and vaccine efficacy | 556 participants; randomized, placebo-controlled, Phase 3; Brazil | COVID-19 clinical evolution | Active, not recruiting |
 | NCT03400878 | Comparison of BCG-Japan vs. BCG-Russia strains on infant morbidity/mortality | 17,505 newborns; randomized, Phase 4; Guinea-Bissau | Hospital admission by 6 weeks of age | Completed |
 | NCT03296423 | BCG to prevent infections of the elderly via trained immunity | 200 participants; randomized, placebo-controlled, Phase 4; Greece | Time to first infection | Completed |
 
-*Table 3. Selected registered clinical trials evaluating BCG-induced trained immunity against heterologous infection, compiled from ClinicalTrials.gov study records (accessed via the ClinicalTrials.gov API, August 2026). Enrollment, design, and endpoint fields are drawn directly from each trial's public registration; numeric outcome results were not publicly posted for these records at the time of writing and are therefore not reported here.*
+**Table 3.** Selected registered clinical trials evaluating BCG-induced trained immunity against heterologous infection, compiled from ClinicalTrials.gov study records (accessed via the ClinicalTrials.gov API, August 2026). Enrollment, design, and endpoint fields are drawn directly from each trial's public registration; numeric outcome results were not publicly posted for these records at the time of writing and are therefore not reported here.
 
 ### 5.3 Cancer Immunotherapy
 

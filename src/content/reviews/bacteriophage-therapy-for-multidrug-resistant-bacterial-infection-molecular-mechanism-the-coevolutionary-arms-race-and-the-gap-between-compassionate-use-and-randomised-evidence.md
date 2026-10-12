@@ -249,11 +249,6 @@ docxPath: >-
   /downloads/bacteriophage-therapy-for-multidrug-resistant-bacterial-infection-molecular-mechanism-the-coevolutionary-arms-race-and-the-gap-between-compassionate-use-and-randomised-evidence.docx
 draft: false
 ---
-
-------------------------------------------------------------------------
-
-# Bacteriophage Therapy for Multidrug-Resistant Bacterial Infection: Molecular Mechanism, the Coevolutionary Arms Race, and the Gap Between Compassionate Use and Randomised Evidence
-
 *A structured literature review*
 
 Compiled 17 August 2026
@@ -274,9 +269,9 @@ Antibacterial chemotherapy rests on a small number of molecular scaffolds discov
 
 The reference forecast to 2050 projects 8.22 million associated and 1.91 million attributable deaths per year. Notably, the same modelling exercise found that a scenario of improved care and access to existing antibiotics would avert roughly eight times as many deaths as a scenario in which a new Gram-negative drug pipeline materialises (92.0 million versus 11.1 million cumulative deaths averted between 2025 and 2050). This is an important framing for any discussion of novel antibacterials: new agents matter, but they matter most for the subset of patients for whom no adequate conventional option exists. That subset — not community-acquired infection at large — is where phage therapy has accumulated its evidence.
 
-![TODO alt text](/figures/bacteriophage-therapy-for-multidrug-resistant-bacterial-infection-molecular-mechanism-the-coevolutionary-arms-race-and-the-gap-between-compassionate-use-and-randomised-evidence/image-1.png)
+![The mortality burden of bacterial antimicrobial resistance.](/figures/bacteriophage-therapy-for-multidrug-resistant-bacterial-infection-molecular-mechanism-the-coevolutionary-arms-race-and-the-gap-between-compassionate-use-and-randomised-evidence/image-1.png)
 
-> **Figure 1.** The mortality burden of bacterial antimicrobial resistance. (A) Global deaths associated with, and attributable to, bacterial AMR in 2021 with 95% uncertainty intervals, alongside the 2050 reference-scenario forecast. (B) Growth between 1990 and 2021 in deaths linked to two priority resistance phenotypes. Chart constructed by the authors from the estimates reported by the GBD 2021 Antimicrobial Resistance Collaborators, Lancet 2024;404:1199–1226 (reference 1); no figure was reproduced from the source article.
+**Figure 1.** The mortality burden of bacterial antimicrobial resistance. (A) Global deaths associated with, and attributable to, bacterial AMR in 2021 with 95% uncertainty intervals, alongside the 2050 reference-scenario forecast. (B) Growth between 1990 and 2021 in deaths linked to two priority resistance phenotypes. Chart constructed by the authors from the estimates reported by the GBD 2021 Antimicrobial Resistance Collaborators, Lancet 2024;404:1199–1226 (reference 1); no figure was reproduced from the source article.
 
 ### 1.2 A century-old idea, revisited
 
@@ -298,9 +293,9 @@ Infection proceeds through five stages. (i) Adsorption: an RBP on the tail fibre
 
 This last point is the source of both the promise and the difficulty of phage therapy. An effective phage is a self-amplifying drug: its concentration at the infection site can rise by orders of magnitude without further dosing, provided susceptible hosts remain. Equally, its concentration collapses when they do not.
 
-![TODO alt text](/figures/bacteriophage-therapy-for-multidrug-resistant-bacterial-infection-molecular-mechanism-the-coevolutionary-arms-race-and-the-gap-between-compassionate-use-and-randomised-evidence/image-2.png)
+![Schematic of the productive lytic cycle (upper panel) and the four functional tiers of bacterial anti-phage defence that can interrupt it (lower panel).](/figures/bacteriophage-therapy-for-multidrug-resistant-bacterial-infection-molecular-mechanism-the-coevolutionary-arms-race-and-the-gap-between-compassionate-use-and-randomised-evidence/image-2.png)
 
-> **Figure 2.** Schematic of the productive lytic cycle (upper panel) and the four functional tiers of bacterial anti-phage defence that can interrupt it (lower panel). Original schematic drawn by the authors; the mechanistic content synthesises references 4, 5, 11, 12, 13, 14, 21 and 23. RBP, receptor-binding protein; CPS, capsular polysaccharide; EPA, enterococcal polysaccharide antigen; LPS, lipopolysaccharide; BREX, bacteriophage exclusion; CBASS, cyclic-oligonucleotide-based antiphage signalling system.
+**Figure 2.** Schematic of the productive lytic cycle (upper panel) and the four functional tiers of bacterial anti-phage defence that can interrupt it (lower panel). Original schematic drawn by the authors; the mechanistic content synthesises references 4, 5, 11, 12, 13, 14, 21 and 23. RBP, receptor-binding protein; CPS, capsular polysaccharide; EPA, enterococcal polysaccharide antigen; LPS, lipopolysaccharide; BREX, bacteriophage exclusion; CBASS, cyclic-oligonucleotide-based antiphage signalling system.
 
 ### 2.3 Receptor specificity sets the host range — and the failure mode
 
@@ -328,14 +323,14 @@ Phages evade these systems, and the mechanisms are instructive because they are 
 
 For therapy, the practical reading of this literature is that phage resistance is not a single obstacle to be engineered around once. It is a multi-layered, evolvable system, and any given therapeutic phage carries only a subset of the counter-measures needed.
 
-**Table 1.** Functional tiers of bacterial anti-phage defence and the phage counter-measures characterised to date. Compiled by the authors from the cited primary literature; no table was reproduced from a source article.
-
 | **Tier** | **Representative systems** | **Molecular action** | **Documented phage counter-measure** |
 |:---|----|----|----|
 | Adsorption blockade | epa / cps locus variation (E. faecium); capsular polysaccharide switching (K. pneumoniae); teichoic acid biosynthesis mutation (S. aureus) | Receptor is lost, altered, or masked, so the receptor-binding protein cannot dock | Host-range expansion by cocktail formulation, RBP engineering, or pre-adaptation of the phage to the patient isolate (refs 2, 4, 5, 21) |
 | Nucleic-acid interference | Restriction–modification; CRISPR–Cas; BREX | Incoming phage genome is recognised as non-self and cleaved | Genome modification and anti-CRISPR proteins; conversely, CRISPR–Cas can be weaponised and delivered by engineered phage (ref 22) |
 | Abortive infection — nucleotide signalling | CBASS (3'3'-cGAMP); Thoeris (2'cADPR, 3'cADPR) | Infection-triggered synthesis of a cyclic nucleotide messenger activates a lethal effector | Acb4-family sponge proteins sequester CBASS signals (\>1,300 homologues; 2.1 Å structure, ref 13); RyDEP glycosidases cleave 2'/3'cADPR and regenerate NAD⁺ (ref 14) |
 | Abortive infection — metabolic destruction | Immune ATP nucleosidases; RADAR (RdrAB, up to 10 MDa) | Cellular ATP/dATP is cleaved at the N-glycosidic bond, or deaminated to ITP, starving the phage of substrate | Not yet characterised; a principal open question for rational phage selection (refs 11, 12) |
+
+**Table 1.** Functional tiers of bacterial anti-phage defence and the phage counter-measures characterised to date. Compiled by the authors from the cited primary literature; no table was reproduced from a source article.
 
 ### 3.3 Resistance that costs the bacterium: phage steering
 
@@ -367,15 +362,15 @@ Clinical improvement was reported in 77.2% (88/114) of targeted infections and e
 
 The dissociation between clinical and microbiological endpoints in this cohort is itself informative: 18 of 106 monitored infections (17.0%) improved clinically without bacterial eradication, and in two patients eradication occurred without clinical improvement. Five patients showed neither, and died of septic shock, cardiogenic shock, or related causes. The authors are explicit that the uncontrolled design, physician-assessed endpoints, and absence of prespecified clinical metrics limit inference — a caveat that should be carried forward into any reading of the percentages above.
 
-![TODO alt text](/figures/bacteriophage-therapy-for-multidrug-resistant-bacterial-infection-molecular-mechanism-the-coevolutionary-arms-race-and-the-gap-between-compassionate-use-and-randomised-evidence/image-3.png)
+![Personalised bacteriophage therapy in 100 consecutive real-world cases.](/figures/bacteriophage-therapy-for-multidrug-resistant-bacterial-infection-molecular-mechanism-the-coevolutionary-arms-race-and-the-gap-between-compassionate-use-and-randomised-evidence/image-3.png)
 
-> **Figure 3.** Personalised bacteriophage therapy in 100 consecutive real-world cases. (A) Distribution of the 114 targeted infections by anatomical indication. (B) Clinical and microbiological outcomes together with three mechanistic readouts. Chart constructed by the authors from the counts and proportions reported by Pirnay et al., Nature Microbiology 2024;9:1434–1453 (reference 2); no figure was reproduced from the source article. 'Other' in panel A aggregates the remaining indications reported in the source.
+**Figure 3.** Personalised bacteriophage therapy in 100 consecutive real-world cases. (A) Distribution of the 114 targeted infections by anatomical indication. (B) Clinical and microbiological outcomes together with three mechanistic readouts. Chart constructed by the authors from the counts and proportions reported by Pirnay et al., Nature Microbiology 2024;9:1434–1453 (reference 2); no figure was reproduced from the source article. 'Other' in panel A aggregates the remaining indications reported in the source.
 
 The mycobacterial experience provides a complementary, and sobering, view of feasibility. Non-tuberculous mycobacteria — particularly Mycobacterium abscessus in cystic fibrosis and bronchiectasis — are intrinsically antibiotic-resistant and represent one of the hardest problems in clinical mycobacteriology. Screening isolates from 200 culture-positive symptomatic patients yielded at least one lytic phage for only 55; 20 patients were treated on a compassionate-use basis; and favourable clinical or microbiological responses were seen in 11. Subsequent synthesis has attributed the heterogeneity of outcome chiefly to antibody-mediated neutralisation during intravenous delivery and to morphotype-dependent susceptibility, with smooth colony variants resistant to currently available phages.
 
-![TODO alt text](/figures/bacteriophage-therapy-for-multidrug-resistant-bacterial-infection-molecular-mechanism-the-coevolutionary-arms-race-and-the-gap-between-compassionate-use-and-randomised-evidence/image-4.png)
+![Feasibility attrition in personalised mycobacteriophage therapy: from patients screened to favourable response.](/figures/bacteriophage-therapy-for-multidrug-resistant-bacterial-infection-molecular-mechanism-the-coevolutionary-arms-race-and-the-gap-between-compassionate-use-and-randomised-evidence/image-4.png)
 
-> **Figure 4.** Feasibility attrition in personalised mycobacteriophage therapy: from patients screened to favourable response. Chart constructed by the authors from the counts reported by Dedrick et al., Clinical Infectious Diseases 2023;76:103–112 (reference 3); no figure was reproduced from the source article.
+**Figure 4.** Feasibility attrition in personalised mycobacteriophage therapy: from patients screened to favourable response. Chart constructed by the authors from the counts reported by Dedrick et al., Clinical Infectious Diseases 2023;76:103–112 (reference 3); no figure was reproduced from the source article.
 
 ### 5.3 The randomised trials, and why they read as failures
 
@@ -387,23 +382,21 @@ The intravesical UTI trial randomised men scheduled for transurethral resection 
 
 The most recent trial randomised 19 participants with diabetic foot ulcers, of whom 13 received the TP-102 cocktail topically at 10⁹ PFU/mL/cm³ after susceptibility testing. No treatment-related adverse events occurred. Microbiological reduction of target bacteria was seen in 80% of TP-102 recipients versus 50% of placebo recipients, and 5/7 (71.4%) versus 1/3 (33.3%) reached 50% wound closure — but with p = 1.000 and p = 0.500 respectively, the study was, as its authors state, underpowered to determine superiority. It is a safety and feasibility result, not an efficacy result.
 
-**Table 2.** Published randomised controlled trials of bacteriophage therapy. All figures are as reported in the primary publications; the table was compiled by the authors and not reproduced from any source.
-
 | **Trial (year)** | **Indication / pathogen** | **Design and n** | **Primary result** | **Interpretation** |
 |:---|----|----|----|----|
 | **PhagoBurn** (2019) | Infected burn wound; P. aeruginosa | Randomised, controlled, double-blind phase 1/2; 27 randomised (13 phage, 14 standard of care); 9 centres, France and Belgium | Median time to sustained 2-quadrant bacterial reduction 144 h (PP1131) vs 47 h (silver sulfadiazine); HR 0.29 (95% CI 0.10–0.79), p = 0.018; stopped early | Titre decayed after manufacture, so the delivered daily dose was far below the intended concentration; failures' isolates were resistant to low phage doses. A dosing failure, not a mechanism failure. |
 | **Intravesical Pyophage** (2021) | UTI in men undergoing transurethral prostate resection | Randomised, placebo-controlled, double-blind, with open-label antibiotic comparator; 97 treated (28 / 32 / 37) | Urine culture normalisation 5/28 (18%) phage vs 9/32 (28%) placebo (OR 1.60, 95% CI 0.45–5.71) vs 13/37 (35%) antibiotic (OR 2.66, 0.79–8.82) | Non-inferior to antibiotics, not superior to placebo. Favourable safety (21% vs 41% adverse events). Used an off-the-shelf commercial cocktail, not a phagogram-matched product. |
 | **TP-102** (2025) | Diabetic foot ulcer; S. aureus, P. aeruginosa and/or A. baumannii | Randomised, double-blind safety and tolerability study; 19 randomised, 13 received TP-102; Israel | No treatment-related adverse events. Microbiological reduction 80% vs 50% (p = 1.000); 50% wound closure 5/7 (71.4%) vs 1/3 (33.3%) (p = 0.500) | Explicitly underpowered for superiority. Supports safety and tolerability of susceptibility-matched topical phage; efficacy untested. |
 
-![TODO alt text](/figures/bacteriophage-therapy-for-multidrug-resistant-bacterial-infection-molecular-mechanism-the-coevolutionary-arms-race-and-the-gap-between-compassionate-use-and-randomised-evidence/image-5.png)
+**Table 2.** Published randomised controlled trials of bacteriophage therapy. All figures are as reported in the primary publications; the table was compiled by the authors and not reproduced from any source.
 
-> **Figure 5.** Primary microbiological outcomes in two randomised, placebo-controlled phage trials. Left, urine culture normalisation at day 7 in the intravesical Pyophage trial (reference 6). Right, microbiological reduction of target bacteria in the TP-102 diabetic foot ulcer trial (reference 7); denominators were not reported for this endpoint in the source publication and are therefore omitted. Chart constructed by the authors from reported values; no figure was reproduced from either source article. SOC, standard of care.
+![Primary microbiological outcomes in two randomised, placebo-controlled phage trials.](/figures/bacteriophage-therapy-for-multidrug-resistant-bacterial-infection-molecular-mechanism-the-coevolutionary-arms-race-and-the-gap-between-compassionate-use-and-randomised-evidence/image-5.png)
+
+**Figure 5.** Primary microbiological outcomes in two randomised, placebo-controlled phage trials. Left, urine culture normalisation at day 7 in the intravesical Pyophage trial (reference 6). Right, microbiological reduction of target bacteria in the TP-102 diabetic foot ulcer trial (reference 7); denominators were not reported for this endpoint in the source publication and are therefore omitted. Chart constructed by the authors from reported values; no figure was reproduced from either source article. SOC, standard of care.
 
 ### 5.4 The current trial pipeline
 
 A search of ClinicalTrials.gov for interventional phase 1–3 studies of bacteriophage interventions returned 66 registered records at the time of writing. The composition of that pipeline is revealing in two ways. First, it has shifted decisively toward defined, sponsor-manufactured products — including recombinant cocktails — rather than adapted bank preparations. Second, it retains a high attrition rate at the sponsor level: several prosthetic joint infection programmes were withdrawn before enrolling a single patient.
-
-**Table 3.** Selected interventional phage trials registered on ClinicalTrials.gov, illustrating the shape of the current pipeline. Retrieved 17 August 2026; status and enrolment as recorded in the registry.
 
 | **Registry ID** | **Product / indication** | **Phase and status** | **Enrolment** | **Notable design feature** |
 |:---|----|----|----|----|
@@ -415,6 +408,8 @@ A search of ClinicalTrials.gov for interventional phase 1–3 studies of bacteri
 | NCT06409819 | Personalised phage therapy; recurrent UTI in kidney transplant recipients | Phase 1/2; recruiting | 32 planned | Personalised selection in an immunosuppressed population |
 | NCT05269134 | PhageBank phage therapy adjunctive to DAIR; chronic prosthetic joint infection | Phase 2; withdrawn | 0 (10 sites opened) | Illustrates programme-level attrition: withdrawn without enrolling |
 | POSTSTAMP (protocol published) | Mycobacteriophage therapy; refractory pulmonary M. abscessus in cystic fibrosis | Prospective multi-site protocol under FDA compassionate-use IND | 10 planned | One or two phages intravenously twice daily for 52 weeks; participants without a phage match followed on guideline-based therapy as comparison group |
+
+**Table 3.** Selected interventional phage trials registered on ClinicalTrials.gov, illustrating the shape of the current pipeline. Retrieved 17 August 2026; status and enrolment as recorded in the registry.
 
 ## 6. Reconciling the paradox
 

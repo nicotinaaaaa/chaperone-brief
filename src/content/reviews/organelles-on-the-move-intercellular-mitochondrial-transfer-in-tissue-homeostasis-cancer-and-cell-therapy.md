@@ -271,11 +271,9 @@ Four broad routes have been characterised, each with distinct molecular requirem
 
 **Receptor-dependent uptake.** Working in white adipose tissue, Brestoff and colleagues used a genome-wide CRISPR–Cas9 knockout screen to show that macrophage uptake of adipocyte-derived mitochondria depends on heparan sulfates. Deleting the heparan sulfate biosynthetic gene Ext1 in myeloid cells reduced uptake, increased adipose mass, lowered energy expenditure and worsened diet-induced obesity — linking the uptake machinery directly to organismal metabolic phenotype.
 
-![TODO alt text](/figures/organelles-on-the-move-intercellular-mitochondrial-transfer-in-tissue-homeostasis-cancer-and-cell-therapy/image-1.png)
+![Four characterised routes of intercellular mitochondrial transfer and their molecular requirements.](/figures/organelles-on-the-move-intercellular-mitochondrial-transfer-in-tissue-homeostasis-cancer-and-cell-therapy/image-1.png)
 
 **Figure 1.** Four characterised routes of intercellular mitochondrial transfer and their molecular requirements. **(A)** Actin-based tunnelling nanotubes carry mitochondria between donor and recipient; MIRO1/TRAK adaptors, M-Sec, Talin-2 and NOX2-derived reactive oxygen species have each been shown to regulate this route. **(B)** Connexin-43 gap junctional channels anchor bone-marrow stromal cells to alveolar epithelium, which then engulfs mitochondria-containing microvesicles. **(C)** Astrocytes release free mitochondrial particles by a calcium-dependent, CD38/cyclic-ADP-ribose-dependent mechanism; the particles enter neighbouring neurons. **(D)** Macrophage uptake of adipocyte mitochondria requires cell-surface heparan sulfates, identified in a genome-wide CRISPR–Cas9 knockout screen. *Original schematic drawn by the authors of this review; mechanisms and molecular mediators as reported in Rustom et al. 2004, Islam et al. 2012, Ahmad et al. 2014, Hayakawa et al. 2016, Marlein et al. 2017, Brestoff et al. 2021 and Baldwin et al. 2024.*
-
-**Table 1.** Routes of intercellular mitochondrial transfer, their molecular requirements and the experimental systems in which each was characterised. *Compiled from the primary sources listed in the final column.*
 
 | **Route** | **Key molecular mediators** | **Experimental system** | **Principal functional consequence** | **Source** |
 |:---|----|----|----|----|
@@ -284,6 +282,8 @@ Four broad routes have been characterised, each with distinct molecular requirem
 | Free extracellular mitochondrial particles | CD38; cyclic ADP-ribose; Ca2+ signalling | Mouse transient focal cerebral ischaemia; astrocyte to neuron | Amplified neuronal survival signalling; improved neurological outcome | Hayakawa 2016 |
 | Receptor-dependent uptake | Heparan sulfates (EXT1-dependent biosynthesis) | Mouse white adipose tissue; adipocyte to macrophage | Regulation of adipose mass and energy expenditure; impaired in obesity | Brestoff 2021 |
 | Endocytic uptake after contact | Contact-dependent; enhanced by chemotherapy | Niche-like coculture of AML blasts with bone-marrow stroma | +14% mitochondrial mass; ~1.5-fold ATP; chemoresistance | Moschoi 2016 |
+
+**Table 1.** Routes of intercellular mitochondrial transfer, their molecular requirements and the experimental systems in which each was characterised. *Compiled from the primary sources listed in the final column.*
 
 ### 2.3 Molecular regulators of transfer
 
@@ -303,7 +303,7 @@ Three lines of evidence establish that transfer is not merely a tissue-culture a
 
 **Metabolic and neurological homeostasis.** The adipocyte-to-macrophage axis links transfer to whole-body energy expenditure, and its impairment in obesity suggests that loss of transfer capacity may contribute to metabolic disease rather than merely accompanying it. In the brain, astrocyte-to-neuron transfer after stroke appears to be an endogenous neuroprotective and neurorecovery mechanism, suggesting that neuroglial crosstalk includes the exchange of whole organelles.
 
-![TODO alt text](/figures/organelles-on-the-move-intercellular-mitochondrial-transfer-in-tissue-homeostasis-cancer-and-cell-therapy/image-2.png)
+![Two decades of intercellular mitochondrial transfer research, from the description of tunnelling nanotubes to the demonstration that mitochondrial hijacking enables lymph-node metastasis.](/figures/organelles-on-the-move-intercellular-mitochondrial-transfer-in-tissue-homeostasis-cancer-and-cell-therapy/image-2.png)
 
 **Figure 2.** Two decades of intercellular mitochondrial transfer research, from the description of tunnelling nanotubes to the demonstration that mitochondrial hijacking enables lymph-node metastasis. Each entry corresponds to a primary publication listed in the reference list. *Original figure compiled by the authors of this review from the cited primary literature.*
 
@@ -311,11 +311,9 @@ Three lines of evidence establish that transfer is not merely a tissue-culture a
 
 In the tumour microenvironment, mitochondrial traffic runs in several directions simultaneously, and each direction has a different consequence (Figure 3, Table 2).
 
-![TODO alt text](/figures/organelles-on-the-move-intercellular-mitochondrial-transfer-in-tissue-homeostasis-cancer-and-cell-therapy/image-3.png)
+![Bidirectional mitochondrial traffic in the tumour microenvironment.](/figures/organelles-on-the-move-intercellular-mitochondrial-transfer-in-tissue-homeostasis-cancer-and-cell-therapy/image-3.png)
 
 **Figure 3.** Bidirectional mitochondrial traffic in the tumour microenvironment. Stromal cells donate mitochondria to tumour cells and confer chemoresistance (1); tumour cells steal mitochondria from lymphocytes, disarming them and acquiring a cGAS–STING-dependent metastatic programme (2); tumour cells push mutation-bearing mitochondria into tumour-infiltrating lymphocytes, where they escape mitophagy and replace the host mitochondrial genome (3); and the same nanotube route can be engineered to load CD8+ T cells with healthy stromal mitochondria for adoptive therapy (4). *Original schematic drawn by the authors of this review; findings and quantitative values as reported in Moschoi et al. 2016, Marlein et al. 2017, Saha et al. 2022, Baldwin et al. 2024, Ikeda et al. 2025 and Terasaki et al. 2026.*
-
-**Table 2.** Quantitative findings on mitochondrial transfer in cancer, as reported in the source publications. *Values are those stated by the authors of each study; effect sizes are not directly comparable across different models and assays.*
 
 | **Direction of transfer** | **Model** | **Reported finding** | **Source** |
 |:---|----|----|----|
@@ -326,6 +324,8 @@ In the tumour microenvironment, mitochondrial traffic runs in several directions
 | Cancer cell → TIL | Human melanoma and NSCLC specimens; mouse models | mtDNA mutations shared between cancer cells and TILs; transferred mitochondria escape mitophagy via co-transferred inhibitory molecules, causing homoplasmic replacement, senescence and impaired effector and memory function; tumour mtDNA mutation was a poor prognostic factor for checkpoint inhibitors | Ikeda et al., Nature 2025 |
 | Immune cell → cancer cell | Lymph-node metastasis models | Acquired mitochondria fuse with the endogenous network, leak mtDNA to the cytosol and activate cGAS/STING and type-I interferon programmes; blocking cGAS, STING or type-I interferon reduced lymph-node metastasis | Terasaki et al., Cell Metab 2026 |
 | Stroma → CD8+ T cell (therapeutic) | Mouse tumour-bearing hosts | Talin-2-dependent nanotube transfer increased mitochondrial respiration and spare respiratory capacity; boosted T cells expanded more, infiltrated tumours better, showed fewer exhaustion signs and prolonged survival | Baldwin et al., Cell 2024 |
+
+**Table 2.** Quantitative findings on mitochondrial transfer in cancer, as reported in the source publications. *Values are those stated by the authors of each study; effect sizes are not directly comparable across different models and assays.*
 
 ### 4.1 Stroma to tumour: fuelling chemoresistance
 
@@ -363,7 +363,7 @@ Successful separation from ECMO, defined as freedom from ECMO reinstitution with
 
 These are encouraging results, but they should be read with the design in mind: this was a retrospective, single-centre, non-randomised comparison in 24 patients accumulated over sixteen years, and the authors present it as a pilot. A prospective study at the same institution (NCT02851758) remains in progress, and an endovascular autologous mitochondrial transplantation study in cerebral ischaemia is recruiting at the University of Washington (NCT04998357).
 
-![TODO alt text](/figures/organelles-on-the-move-intercellular-mitochondrial-transfer-in-tissue-homeostasis-cancer-and-cell-therapy/image-4.png)
+![Outcomes of autologous mitochondrial transplantation in children requiring postcardiotomy ECMO for refractory cardiogenic shock after ischaemia–reperfusion injury.](/figures/organelles-on-the-move-intercellular-mitochondrial-transfer-in-tissue-homeostasis-cancer-and-cell-therapy/image-4.png)
 
 **Figure 4.** Outcomes of autologous mitochondrial transplantation in children requiring postcardiotomy ECMO for refractory cardiogenic shock after ischaemia–reperfusion injury. **(A)** Successful separation from ECMO and incidence of cardiovascular events. **(B)** Median time to functional recovery after revascularisation. **(C)** Median circumferential strain immediately after ECMO separation (more negative values indicate better function); whiskers show the ranges reported by the authors. *Chart constructed by the authors of this review from the numerical results reported in Guariento et al., J Thorac Cardiovasc Surg 2021;162(3):992–1001. Retrospective, single-centre, non-randomised pilot comparison (n = 24).*
 
@@ -379,8 +379,6 @@ Mitochondrial loss and dysfunction drive T-cell exhaustion, a principal barrier 
 
 CD8+ T cells that received donated mitochondria displayed enhanced mitochondrial respiration and increased spare respiratory capacity. Transferred into tumour-bearing hosts, these cells expanded more robustly, infiltrated tumours more efficiently and showed fewer signs of exhaustion than T cells that had not taken up mitochondria; they mediated superior antitumour responses and prolonged animal survival. The authors describe the approach as a prototype of organelle medicine — an apt description of a modality in which neither a small molecule nor a gene but an organelle is the therapeutic agent.
 
-**Table 3.** Clinical translation of mitochondrial transfer and transplantation: selected registered studies and published human experience. *Registry data retrieved from ClinicalTrials.gov; published outcomes from the cited publications. Status as recorded at the time of retrieval.*
-
 | **Programme / identifier** | **Indication** | **Design and status** | **Outcome reported** |
 |:---|----|----|----|
 | Autologous mitochondrial transplantation (Boston Children's Hospital); published pilot series | Paediatric postcardiotomy cardiogenic shock after ischaemia–reperfusion injury | Retrospective single-centre comparison, n = 24 (10 treated, 14 control), 2002–2018 | 80% vs 29% successful ECMO separation (P = .02); strain −23.0% vs −16.8% (P = .03); recovery 2 vs 9 days (P = .02); cardiovascular events 20% vs 79% (P \< .01). Guariento et al. 2021 |
@@ -389,6 +387,8 @@ CD8+ T cells that received donated mitochondria displayed enhanced mitochondrial
 | Mitochondrial augmentation therapy, MNV-BM-BLD (Minovia Therapeutics); NCT03384420 | Pearson syndrome and other single large-scale mtDNA deletion syndromes | Phase 1/2, n = 7 (registry); published compassionate-use series of 6 children | Well tolerated; heteroplasmy decreased in 4/6; mtDNA content increased in all 6 at 6–12 months; weight gain in 5/6; some improvement in aerobic function and quality of life. Jacoby et al. 2022 |
 | PN-101 (Paean Biotechnology); NCT04976140 | Refractory polymyositis and dermatomyositis | Phase 1/2a dose escalation, n = 9, completed | Safety, tolerability and exploratory efficacy of a mitochondria-based product; registry record only |
 | Preclinical: engineered mitochondrial loading of CD8+ T cells | Adoptive T-cell therapy for solid tumours | Mouse models; no registered human study identified | Enhanced respiration and spare respiratory capacity, better tumour infiltration, fewer exhaustion markers, prolonged survival. Baldwin et al. 2024 |
+
+**Table 3.** Clinical translation of mitochondrial transfer and transplantation: selected registered studies and published human experience. *Registry data retrieved from ClinicalTrials.gov; published outcomes from the cited publications. Status as recorded at the time of retrieval.*
 
 ## 6. Discussion: open questions
 

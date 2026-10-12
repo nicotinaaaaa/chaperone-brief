@@ -239,9 +239,9 @@ Growth differentiation factor 15 was first described in 1997 by Bootcov and coll
 
 Over the following two decades GDF-15 accumulated an unusual epidemiological profile. Barely detectable in most healthy somatic tissue but abundant in placenta, it rises in inflammation, myocardial ischaemia, renal disease, mitochondrial disorders and, above all, cancer, and elevated levels track with weight loss and mortality across a remarkable range of conditions.³˒⁵˒²² This made it one of the most reliable prognostic analytes in clinical medicine, but its ubiquity also made it look epiphenomenal — a smoke detector rather than the fire. The decisive question could not be answered without knowing where GDF-15 acted, and for twenty years its receptor was unknown.³
 
-![TODO alt text](/figures/somatic-distress-as-a-drug-target-the-gdf-15-gfral-axis-in-cancer-cachexia/image-1.png)
+![Principal milestones in GDF-15 biology, from the cloning of MIC-1 to the current phase 2b/3 cachexia programmes.](/figures/somatic-distress-as-a-drug-target-the-gdf-15-gfral-axis-in-cancer-cachexia/image-1.png)
 
-Figure 1. Principal milestones in GDF-15 biology, from the cloning of MIC-1 to the current phase 2b/3 cachexia programmes. Compiled by the author from the primary sources cited throughout this review (refs. 2, 6, 9–15, 18) and from ClinicalTrials.gov registration records (ref. 25).
+**Figure 1.** Principal milestones in GDF-15 biology, from the cloning of MIC-1 to the current phase 2b/3 cachexia programmes. Compiled by the author from the primary sources cited throughout this review (refs. 2, 6, 9–15, 18) and from ClinicalTrials.gov registration records (ref. 25).
 
 ## 2. GDF-15: biosynthesis and transcriptional control
 
@@ -259,9 +259,9 @@ Patel and colleagues established this link in an elegant series of human and mou
 
 The same ISR logic explains GDF-15's behaviour in non-oncological disease. It is a principal secreted output of mitochondrial stress, which is why it is elevated in primary mitochondrial myopathies and in sepsis,⁷ and why it and FGF21 are frequently co-regulated as a stress-cytokine pair in models of mitochondrial perturbation.⁸ In cancer, both the tumour and stressed host tissues contribute, and the resulting plasma concentrations — typically well above the ~0.2–1.2 ng/mL seen in health — can reach levels that in a healthy volunteer would be considered pathological.
 
-![TODO alt text](/figures/somatic-distress-as-a-drug-target-the-gdf-15-gfral-axis-in-cancer-cachexia/image-2.png)
+![Integrated schematic of the GDF-15–GFRAL axis in cancer cachexia.](/figures/somatic-distress-as-a-drug-target-the-gdf-15-gfral-axis-in-cancer-cachexia/image-2.png)
 
-Figure 2. Integrated schematic of the GDF-15–GFRAL axis in cancer cachexia. Original figure drawn by the author from mechanisms and quantitative thresholds reported in refs. 2–6, 9–13 and 18; the enrolment threshold of ≥1500 pg/mL is that used in the PROACC-1 trial (ref. 18). Dashed boxes mark the two pharmacological intervention points that have entered clinical development: neutralisation of the circulating ligand and antagonism of the receptor.
+**Figure 2.** Integrated schematic of the GDF-15–GFRAL axis in cancer cachexia. Original figure drawn by the author from mechanisms and quantitative thresholds reported in refs. 2–6, 9–13 and 18; the enrolment threshold of ≥1500 pg/mL is that used in the PROACC-1 trial (ref. 18). Dashed boxes mark the two pharmacological intervention points that have entered clinical development: neutralisation of the circulating ligand and antagonism of the receptor.
 
 ## 3. GFRAL–RET: an anatomically restricted receptor
 
@@ -276,7 +276,7 @@ In 2017 four groups — working independently at NGM Biopharmaceuticals, Janssen
 | Yang et al., Nat Med 2017¹¹ | Binding screens; surface plasmon resonance | GDF-15 binds GFRAL specifically and with high affinity; GFRAL requires association with RET to elicit intracellular signalling; anti-obesity effects abolished in Gfral-knockouts; GFRAL expression confined to hindbrain neurons with none in peripheral tissues. Energy expenditure was not increased, implicating reduced intake as the primary mechanism. |
 | Emmerson et al., Nat Med 2017¹² | Orphan-receptor deorphanisation | Independently identified GFRAL as the mediator of the metabolic effects of GDF-15, confirming the hindbrain localisation and the requirement for the receptor in GDF-15-induced weight loss. |
 
-Table 1. The four independent 2017 reports that identified GFRAL as the receptor for GDF-15. Content summarised from the abstracts and reported findings of refs. 9–12.
+**Table 1.** The four independent 2017 reports that identified GFRAL as the receptor for GDF-15. Content summarised from the abstracts and reported findings of refs. 9–12.
 
 ### 3.2 Receptor architecture and proximal signalling
 
@@ -345,11 +345,11 @@ A total of 187 patients were randomised; 40% had non-small-cell lung cancer, 32%
 | Ponsegromab 400 mg | +2.81 kg | 1.55 to 4.08 | Improvements in appetite, cachexia symptoms and physical activity vs placebo |
 | Placebo | reference | — | Adverse events of any cause in 80% (vs 70% on ponsegromab) |
 
-Table 2. Primary and selected secondary results of the PROACC-1 phase 2 trial of ponsegromab in cancer cachexia (n = 187; NCT05546476). Values reproduced from the results reported by Groarke et al., N Engl J Med 2024 (ref. 18).
+**Table 2.** Primary and selected secondary results of the PROACC-1 phase 2 trial of ponsegromab in cancer cachexia (n = 187; NCT05546476). Values reproduced from the results reported by Groarke et al., N Engl J Med 2024 (ref. 18).
 
-![TODO alt text](/figures/somatic-distress-as-a-drug-target-the-gdf-15-gfral-axis-in-cancer-cachexia/image-3.png)
+![Dose–response for the PROACC-1 primary endpoint.](/figures/somatic-distress-as-a-drug-target-the-gdf-15-gfral-axis-in-cancer-cachexia/image-3.png)
 
-Figure 3. Dose–response for the PROACC-1 primary endpoint. Bars show the median between-group difference in 12-week body-weight change versus placebo; whiskers show 95% credible intervals. Chart constructed by the author from the numerical results reported in ref. 18.
+**Figure 3.** Dose–response for the PROACC-1 primary endpoint. Bars show the median between-group difference in 12-week body-weight change versus placebo; whiskers show 95% credible intervals. Chart constructed by the author from the numerical results reported in ref. 18.
 
 ### 5.4 The wider clinical landscape
 
@@ -366,7 +366,7 @@ The GDF-15 axis is now being pursued in two distinct therapeutic contexts. The c
 | NCT07098988 / NCT07246863 | Visugromab · CatalYm | 2 | Recruiting | First- and second-line metastatic non-squamous NSCLC; n = 107 and 131 |
 | NCT05865535 | AV-380 · AVEO | 1b | Recruiting | Metastatic cancer with cachexia and elevated GDF-15, with standard chemotherapy; n = 30 |
 
-Table 3. Registered clinical programmes targeting the GDF-15 axis, as recorded on ClinicalTrials.gov and retrieved for this review (ref. 25). Enrolment figures are target or actual enrolment as registered. The heart-failure study of ponsegromab (NCT05492500) is listed as terminated.
+**Table 3.** Registered clinical programmes targeting the GDF-15 axis, as recorded on ClinicalTrials.gov and retrieved for this review (ref. 25). Enrolment figures are target or actual enrolment as registered. The heart-failure study of ponsegromab (NCT05492500) is listed as terminated.
 
 ## 6. Discussion: what is established and what is not
 
