@@ -202,8 +202,9 @@ if (headingResult.removed) {
 }
 {
 	const r = normalized.report;
-	if (r.rewritten.length + r.merged.length + r.moved.length + r.alt.length > 0) {
+	if (r.rewritten.length + r.merged.length + r.moved.length + r.alt.length + r.repairedRows.length > 0) {
 		console.log('Normalised figures and captions:');
+		if (r.repairedRows.length) console.log(`  - ${r.repairedRows.length} table row(s) that wrapped onto a second line rejoined`);
 		if (r.rewritten.length) console.log(`  - ${r.rewritten.length} caption(s) rewritten to the bold-prefix form`);
 		if (r.merged.length) console.log(`  - ${r.merged.length} table caption(s) merged (title above + note below → one caption below)`);
 		if (r.moved.length) console.log(`  - ${r.moved.length} table caption(s) moved from above their table to below it`);

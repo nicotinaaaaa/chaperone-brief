@@ -379,11 +379,42 @@ function isImageBlock(text) {
 	return /^!\[[^\]]*\]\([^)]*\)$/.test(text.trim());
 }
 
+// "| --- | :-: |" — the second line of every pipe table.
+const PIPE_DELIMITER_ROW = /^\|?\s*:?-{1,}:?\s*(\|\s*:?-{1,}:?\s*)+\|?\s*$/;
+// A row's closing pipe; an escaped "\|" at the end of a line is cell text.
+const ROW_CLOSED = /(?<!\\)\|\s*$/;
+
+function isPipeTable(lines) {
+	return lines.length >= 2 && lines[0].trim().startsWith('|') && PIPE_DELIMITER_ROW.test(lines[1].trim());
+}
+
 function isTableBlock(text) {
 	const s = text.trim();
 	if (/^<table[\s>][\s\S]*<\/table>$/i.test(s)) return true;
 	const lines = s.split('\n');
-	return lines.length >= 2 && lines.every((l) => l.trim().startsWith('|'));
+	return isPipeTable(lines) || (lines.length >= 2 && lines.every((l) => l.trim().startsWith('|')));
+}
+
+// A table cell that held a soft line break comes out of pandoc as a row split
+// across two lines ("| NCT04328441" / "(BCG-CORONA) | BCG to reduce…"). Markdown
+// reads that as two rows — a one-cell stub plus a misaligned remainder — so
+// rejoin each unterminated row with the lines that continue it. A soft break
+// is a space; nothing else about the cell text changes.
+function repairWrappedRows(text) {
+	const lines = text.split('\n');
+	if (!isPipeTable(lines)) return { text, repaired: [] };
+	const out = [];
+	const repaired = [];
+	for (const line of lines) {
+		const prev = out[out.length - 1];
+		if (prev !== undefined && prev.trim().startsWith('|') && !ROW_CLOSED.test(prev) && !line.trim().startsWith('|')) {
+			out[out.length - 1] = `${prev.trimEnd()} ${line.trim()}`;
+			repaired.push(out[out.length - 1].trim().slice(0, 70));
+		} else {
+			out.push(line);
+		}
+	}
+	return { text: out.join('\n'), repaired };
 }
 
 // Returns { body, report }. Never throws on unrecognised content — anything it
@@ -406,7 +437,14 @@ export function normalizeFiguresAndCaptions(body) {
 		}
 	}
 
-	const report = { rewritten: [], moved: [], merged: [], alt: [], missingAlt: [] };
+	const report = { rewritten: [], moved: [], merged: [], alt: [], missingAlt: [], repairedRows: [] };
+	for (const block of blocks) {
+		const { text, repaired } = repairWrappedRows(block.text);
+		if (repaired.length > 0) {
+			block.text = text;
+			report.repairedRows.push(...repaired);
+		}
+	}
 	const consumed = new Set();
 	const dropped = new Set();
 	const appendAfter = new Map();
