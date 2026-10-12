@@ -307,7 +307,7 @@ sources:
     doi: 10.1007/s00125-010-1973-8
     pmid: 21107520
 docxPath: >-
-  /downloads/cell-dedifferentiation-and-the-loss-of-islet-cell-identity-in-type-2-diabetes.docx
+  /downloads/beta-cell-dedifferentiation-and-the-loss-of-islet-cell-identity-in-type-2-diabetes.docx
 draft: false
 ---
 *Mechanisms, human evidence, and the therapeutic case for redifferentiation*
@@ -383,13 +383,13 @@ Histology from deceased donors cannot establish that dedifferentiation causes se
 
 The dedifferentiation ratio was inversely correlated with HOMA-β (r = −0.79, p = 0.0012; reproduced in Figure 2) and with 2-hour C-peptide (r = −0.55, p = 0.051). In multiple regression, HOMA-β — but not BMI or HbA₁c — was independently and negatively associated with the percentage of dedifferentiated cells (β = 0.0659, p = 0.0060). The proportion of ALDH1A3-positive β-cells likewise correlated negatively with HOMA-β (r = −0.74, p = 0.006). Because these subjects had no diagnosed diabetes, the finding places dedifferentiation *upstream* of overt hyperglycaemia rather than merely as its consequence **<sup>\[3,4\]</sup>**.
 
-![β-Cell dedifferentiation burden versus in vivo β-cell function in 13 individuals without known diabetes undergoing partial pancreatectomy.](/figures/cell-dedifferentiation-and-the-loss-of-islet-cell-identity-in-type-2-diabetes/image-1.png)
+![β-Cell dedifferentiation burden versus in vivo β-cell function in 13 individuals without known diabetes undergoing partial pancreatectomy.](/figures/beta-cell-dedifferentiation-and-the-loss-of-islet-cell-identity-in-type-2-diabetes/image-1.png)
 
 **Figure 2.** β-Cell dedifferentiation burden versus in vivo β-cell function in 13 individuals without known diabetes undergoing partial pancreatectomy. Points are the primary subject-level data published in Table 1 of Kang F, Zhang Z, Fu H, et al., *J Clin Endocrinol Metab* 2025;110(5):e1430–e1438 (doi:10.1210/clinem/dgae538) **<sup>\[3\]</sup>**; the dashed line is an ordinary least-squares fit added here. The Pearson coefficient recomputed from those data (r = −0.792, p = 0.00125) matches the published value (r = −0.79, p = 0.0012). Colour separates the HOMA-β high (≥100%) and HOMA-β low (\<100%) groups as defined in the source.
 
 Grouping the same subjects by HOMA-β revealed an approximately two-fold difference in every identity measure: dedifferentiated cells 8.42 ± 0.26% versus 4.09 ± 0.26% (p \< 0.0001); ALDH1A3-positive β-cells 14.33 ± 1.66% versus 7.28 ± 1.17% (p = 0.0061); BACH2-positive β-cells 9.21 ± 1.54% versus 5.55 ± 0.65% (p = 0.029). GLUT2 intensity was lower in the low-function group (9.22 ± 2.92 versus 18.53 ± 2.06, p = 0.026). Notably, there was **no difference in β-cell proliferation or apoptosis** between the groups — consistent with identity loss, not cell death, as the operative mechanism **<sup>\[3\]</sup>**.
 
-![Quantified dedifferentiation in human pancreas across two independent cohorts.](/figures/cell-dedifferentiation-and-the-loss-of-islet-cell-identity-in-type-2-diabetes/image-2.png)
+![Quantified dedifferentiation in human pancreas across two independent cohorts.](/figures/beta-cell-dedifferentiation-and-the-loss-of-islet-cell-identity-in-type-2-diabetes/image-2.png)
 
 **Figure 3.** Quantified dedifferentiation in human pancreas across two independent cohorts. Left and centre: organ-donor series of Cinti et al. **<sup>\[2\]</sup>** (n = 15 with T2D, 15 without), scored as a percentage of β-cells and of all endocrine cells. Right: pancreatectomy series of Kang et al. **<sup>\[3\]</sup>** (n = 13 without known diabetes), scored as chromogranin A-positive, hormone-negative cells and stratified by HOMA-β (error bars, SEM; the Cinti series reports group means without SEM in the source abstract). Fold-change above each pair. Note that the two cohorts use different scoring denominators and different populations, so absolute percentages are not directly comparable; the consistent finding is the direction and approximate magnitude of the effect.
 
@@ -403,7 +403,7 @@ A reanalysis of full-length single-cell RNA-seq from human donors found that alt
 
 Figure 1 summarises the architecture of the pathway as it is currently understood: a convergent set of upstream stressors, a proximal signalling tier dominated by FOXO1 and by metabolic–epigenetic reprogramming, a shared effector programme, and three phenotypic outputs that feed back onto the stressors to form a self-reinforcing cycle.
 
-![Integrated pathway of β-cell dedifferentiation in type 2 diabetes.](/figures/cell-dedifferentiation-and-the-loss-of-islet-cell-identity-in-type-2-diabetes/image-3.png)
+![Integrated pathway of β-cell dedifferentiation in type 2 diabetes.](/figures/beta-cell-dedifferentiation-and-the-loss-of-islet-cell-identity-in-type-2-diabetes/image-3.png)
 
 **Figure 1.** Integrated pathway of β-cell dedifferentiation in type 2 diabetes. Schematic assembled for this review from the mechanisms reported in references **<sup>\[1–5, 9–12, 14\]</sup>**; it is an original synthesis rather than a reproduction of any single published figure. Red: upstream stressors. Blue: proximal signalling. Olive: the effector dedifferentiation programme. Grey/red: phenotypic outputs. Green: the reversibility arm established by lineage tracing and pharmacological intervention (Section 6). The dashed loop indicates the feed-forward cycle whereby secretory failure worsens hyperglycaemia, which in turn intensifies glucotoxic stress.
 
