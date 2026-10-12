@@ -63,7 +63,35 @@ const MANIFEST = {
 		subfield: 'immunology',
 		tags: ['trained-immunity', 'BCG-vaccine', 'innate-immune-memory', 'epigenetic-reprogramming'],
 	},
+	// Reviews added after the original archive backfill go straight to
+	// published (draft: false) — the backfill's draft: true was a staging step.
+	'apol1-kidney-disease-review.md': {
+		summary:
+			'Two APOL1 variants that protect against African sleeping sickness cause a large excess of kidney failure in people of recent sub-Saharan African ancestry, and how they injure podocytes remains genuinely contested. The first mechanism-targeted drugs, led by the channel blocker inaxaplin, cut proteinuria by 47.6% in an open-label phase 2a study but still rest on short-term surrogate endpoints.',
+		subfield: 'nephrology',
+		tags: ['APOL1', 'kidney-disease', 'podocyte', 'precision-nephrology'],
+		draft: false,
+	},
+	'beta-cell-dedifferentiation-t2d-review.md': {
+		summary:
+			'In type 2 diabetes, many failing β-cells are not dying but losing their differentiated identity — and because lineage tracing shows the change is reversible, restoring that identity is an emerging therapeutic target. The review traces the pathway from metabolic stress through FOXO1 to effector programmes marked by ALDH1A3 and BACH2, and notes that no clinical trial yet uses β-cell identity as an endpoint.',
+		subfield: 'endocrinology',
+		tags: ['beta-cell-dedifferentiation', 'type-2-diabetes', 'FOXO1', 'ALDH1A3'],
+		draft: false,
+	},
+	'somatic-cag-expansion-mmr-huntingtons-review.md': {
+		summary:
+			"In Huntington's disease the inherited CAG repeat keeps expanding in neurons throughout life through error-prone DNA mismatch repair, and human genetics now points to this somatic expansion — not the protein's glutamine tract — as what sets the age of onset. The review covers the evidence and the therapeutic programme that follows from it, including the first drug lowering both HTT and PMS1 to reach randomised Phase 2/3 testing.",
+		subfield: 'genetics',
+		tags: ['huntingtons-disease', 'somatic-repeat-expansion', 'mismatch-repair', 'MSH3'],
+		draft: false,
+	},
 };
+
+// Optional filename arguments restrict the run to those manifest entries
+// (e.g. `node scripts/apply-review-frontmatter.mjs apol1-kidney-disease-review.md`);
+// with none, every entry is rewritten.
+const only = process.argv.slice(2);
 
 function buildSource(p) {
 	const source = {};
@@ -81,6 +109,7 @@ let totalDropped = 0;
 let totalKept = 0;
 
 for (const [filename, config] of Object.entries(MANIFEST)) {
+	if (only.length > 0 && !only.includes(filename)) continue;
 	const filePath = path.resolve('inbox', filename);
 	const raw = fs.readFileSync(filePath, 'utf-8');
 	const parsed = matter(raw);
@@ -109,7 +138,7 @@ for (const [filename, config] of Object.entries(MANIFEST)) {
 	data.subfield = config.subfield;
 	data.tags = config.tags;
 	data.sources = sources;
-	data.draft = true;
+	data.draft = config.draft ?? true;
 
 	fs.writeFileSync(filePath, matter.stringify(parsed.content, data));
 	console.log(`✓ ${filename}: ${sources.length} source(s) written`);

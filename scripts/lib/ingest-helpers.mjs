@@ -52,12 +52,17 @@ export function deriveTitleFromH1(body) {
 // <h1> alongside the page template's own title. Strips it; a no-op if the
 // body doesn't start with an h1, or if there's no title to compare against.
 // Deterministic, same shape as stripTableOfContents.
+//
+// Blank lines and horizontal rules before the heading are skipped (and
+// dropped with it): a kicker line deleted ahead of a "rule, then title"
+// layout leaves the rule as the first thing in the body, and a leading rule
+// otherwise hides the heading from this check, leaving a second <h1>.
 export function stripLeadingHeading(body, title) {
 	if (!title) return { body, removed: null };
 
 	const lines = body.split('\n');
 	let i = 0;
-	while (i < lines.length && lines[i].trim() === '') i++;
+	while (i < lines.length && (lines[i].trim() === '' || HR_PATTERN.test(lines[i]))) i++;
 	if (i >= lines.length || !/^#(?!#)\s+.+$/.test(lines[i])) {
 		return { body, removed: null };
 	}
@@ -272,6 +277,211 @@ export function stripTableOfContents(body) {
 			consumedTrailingRule,
 		},
 	};
+}
+
+// ---------------------------------------------------------------------------
+// Figure and table captions, and figure alt text.
+//
+// The site's caption transform (src/lib/rehype-captions.ts) only recognises a
+// paragraph that directly FOLLOWS an image or a table and opens with a bold
+// "Figure N." / "Table N." label. docx conversions produce plenty of other
+// shapes — a caption that sits above its table, a title above plus a source
+// note below, fully-bold / fully-italic / plain / blockquoted captions — none
+// of which get the figure/figcaption treatment. This rewrites them all to the
+// one recognised shape, and gives every image real alt text taken from its
+// own caption rather than a placeholder.
+// ---------------------------------------------------------------------------
+
+const CAPTION_ABBREVIATIONS = new Set(['et al', 'vs', 'approx', 'fig', 'figs', 'eq', 'etc', 'ca', 'cf', 'e.g', 'i.e', 'no', 'vol', 'pp']);
+const ALT_MAX_LENGTH = 200;
+
+function parseCaption(raw) {
+	const t = raw
+		.split('\n')
+		.map((l) => l.replace(/^\s*>\s?/, ''))
+		.join(' ')
+		.replace(/\s+/g, ' ')
+		.trim();
+	const m =
+		t.match(/^\*\*(Figure|Table)\s+(\d+)\.\*\*\s*(.*)$/s) || // **Figure 1.** body
+		t.match(/^\*\*(Figure|Table)\s+(\d+)\.\s+(.*?)\*\*$/s) || // **Figure 1. body**
+		t.match(/^[*_](Figure|Table)\s+(\d+)\.\s+(.*)[*_]$/s) || // *Figure 1. body*
+		t.match(/^(Figure|Table)\s+(\d+)\.\s+(.*)$/s); // Figure 1. body
+	if (!m) return null;
+	let body = m[3].trim();
+	const wholeItalic = body.match(/^\*(?!\*)(.+)\*$/s);
+	if (wholeItalic && !wholeItalic[1].includes('*')) body = wholeItalic[1].trim();
+	return { kind: m[1], n: m[2], body };
+}
+
+function canonicalCaption(kind, n, body) {
+	return `**${kind} ${n}.** ${body}`.trim();
+}
+
+function endsSentence(text) {
+	return /[.!?]["')\]]?$/.test(text.trim());
+}
+
+function altFromCaptionBody(body) {
+	const plain = body
+		.replace(/\\\[[^\]]*\\\]/g, '') // \[12\] style citation markers
+		.replace(/<sup>.*?<\/sup>/gi, '')
+		.replace(/\\(.)/g, '$1')
+		.replace(/[*_`]/g, '')
+		.replace(/[\[\]]/g, '')
+		.replace(/\s+/g, ' ')
+		.replace(/\s+([;,.:])/g, '$1') // gaps left where a citation marker was removed
+		.trim();
+	const re = /[.!?](?=\s|$)/g;
+	let sentence = plain;
+	let m;
+	while ((m = re.exec(plain))) {
+		// A period straight after ")" ends a sentence ("…investigation (B).");
+		// otherwise a lone letter or a known abbreviation is not a sentence end.
+		if (plain[m.index - 1] !== ')') {
+			const words = plain.slice(0, m.index).match(/[A-Za-z]+(?:\.[A-Za-z]+)*/g) ?? [];
+			const last = (words[words.length - 1] ?? '').toLowerCase();
+			const lastTwo = words.length >= 2 ? `${words[words.length - 2]} ${words[words.length - 1]}`.toLowerCase() : '';
+			if (last.length === 1 || CAPTION_ABBREVIATIONS.has(last) || CAPTION_ABBREVIATIONS.has(lastTwo)) continue;
+		}
+		sentence = plain.slice(0, m.index + 1);
+		break;
+	}
+	if (sentence.length > ALT_MAX_LENGTH) {
+		// Too long for alt text: a caption's opening clause is its title, and
+		// what trails it is usually provenance ("…, synthesized from X et al.").
+		// Cut at the first clause boundary past a minimum length rather than
+		// mid-phrase with an ellipsis; only fall back to a word-boundary cut
+		// when there's no clause boundary within the limit.
+		const window = sentence.slice(0, ALT_MAX_LENGTH);
+		const boundary = window.slice(60).search(/[,;:]|\s—\s/);
+		if (boundary !== -1) {
+			sentence = window.slice(0, 60 + boundary).trimEnd();
+		} else {
+			sentence = `${window.slice(0, window.lastIndexOf(' ')).trimEnd()}…`;
+		}
+	}
+	return sentence;
+}
+
+function isImageBlock(text) {
+	return /^!\[[^\]]*\]\([^)]*\)$/.test(text.trim());
+}
+
+function isTableBlock(text) {
+	const s = text.trim();
+	if (/^<table[\s>][\s\S]*<\/table>$/i.test(s)) return true;
+	const lines = s.split('\n');
+	return lines.length >= 2 && lines.every((l) => l.trim().startsWith('|'));
+}
+
+// Returns { body, report }. Never throws on unrecognised content — anything it
+// can't confidently classify is left exactly as it was.
+export function normalizeFiguresAndCaptions(body) {
+	const pieces = body.split(/(\n[ \t]*\n+)/);
+	const blocks = [];
+	for (let i = 0; i < pieces.length; i += 2) {
+		blocks.push({ text: pieces[i], sep: pieces[i + 1] ?? '' });
+	}
+
+	// A raw-HTML table can contain blank lines; rejoin it into one block.
+	for (let i = 0; i < blocks.length; i++) {
+		if (/^<table[\s>]/i.test(blocks[i].text.trim()) && !/<\/table>/i.test(blocks[i].text)) {
+			while (i + 1 < blocks.length && !/<\/table>/i.test(blocks[i].text)) {
+				blocks[i].text += blocks[i].sep + blocks[i + 1].text;
+				blocks[i].sep = blocks[i + 1].sep;
+				blocks.splice(i + 1, 1);
+			}
+		}
+	}
+
+	const report = { rewritten: [], moved: [], merged: [], alt: [], missingAlt: [] };
+	const consumed = new Set();
+	const dropped = new Set();
+	const appendAfter = new Map();
+
+	for (let i = 0; i < blocks.length; i++) {
+		const text = blocks[i].text;
+
+		if (isImageBlock(text)) {
+			const next = i + 1 < blocks.length ? parseCaption(blocks[i + 1].text) : null;
+			const cap = next && next.kind === 'Figure' && !consumed.has(i + 1) ? next : null;
+			let altSource = null;
+			if (cap) {
+				const canonical = canonicalCaption(cap.kind, cap.n, cap.body);
+				if (canonical !== blocks[i + 1].text.trim()) {
+					report.rewritten.push({ from: blocks[i + 1].text.trim().slice(0, 70), to: canonical.slice(0, 70) });
+					blocks[i + 1].text = canonical;
+				}
+				consumed.add(i + 1);
+				altSource = cap;
+			}
+			const im = text.trim().match(/^!\[([^\]]*)\]\((.*)\)$/s);
+			if (im) {
+				const currentAlt = im[1].trim();
+				if (currentAlt === '' || /^TODO alt text$/i.test(currentAlt)) {
+					if (altSource) {
+						const alt = altFromCaptionBody(altSource.body);
+						blocks[i].text = `![${alt}](${im[2]})`;
+						report.alt.push({ label: `Figure ${altSource.n}`, alt });
+					} else {
+						blocks[i].text = `![](${im[2]})`;
+						report.missingAlt.push(im[2]);
+					}
+				}
+			}
+			continue;
+		}
+
+		if (isTableBlock(text)) {
+			const afterIdx = i + 1;
+			const beforeIdx = i - 1;
+			const after = afterIdx < blocks.length && !consumed.has(afterIdx) ? parseCaption(blocks[afterIdx].text) : null;
+			const before = beforeIdx >= 0 && !consumed.has(beforeIdx) ? parseCaption(blocks[beforeIdx].text) : null;
+			const afterOk = after && after.kind === 'Table' ? after : null;
+			const beforeOk = before && before.kind === 'Table' && (!afterOk || afterOk.n === before.n) ? before : null;
+
+			if (afterOk && beforeOk) {
+				// A title above the table and a note/source below it: one caption.
+				const title = endsSentence(beforeOk.body) ? beforeOk.body : `${beforeOk.body}.`;
+				const merged = canonicalCaption('Table', afterOk.n, `${title} ${afterOk.body}`);
+				blocks[afterIdx].text = merged;
+				dropped.add(beforeIdx);
+				consumed.add(afterIdx);
+				consumed.add(beforeIdx);
+				report.merged.push({ label: `Table ${afterOk.n}`, to: merged.slice(0, 90) });
+			} else if (afterOk) {
+				const canonical = canonicalCaption('Table', afterOk.n, afterOk.body);
+				if (canonical !== blocks[afterIdx].text.trim()) {
+					report.rewritten.push({ from: blocks[afterIdx].text.trim().slice(0, 70), to: canonical.slice(0, 70) });
+					blocks[afterIdx].text = canonical;
+				}
+				consumed.add(afterIdx);
+			} else if (beforeOk) {
+				// Caption above the table: move it below.
+				const canonical = canonicalCaption('Table', beforeOk.n, beforeOk.body);
+				dropped.add(beforeIdx);
+				consumed.add(beforeIdx);
+				appendAfter.set(i, canonical);
+				report.moved.push({ label: `Table ${beforeOk.n}`, to: canonical.slice(0, 90) });
+			}
+		}
+	}
+
+	const out = [];
+	for (let i = 0; i < blocks.length; i++) {
+		if (dropped.has(i)) continue;
+		const isLastKept = (() => {
+			for (let j = i + 1; j < blocks.length; j++) if (!dropped.has(j)) return false;
+			return true;
+		})();
+		if (appendAfter.has(i)) {
+			out.push(blocks[i].text, '\n\n', appendAfter.get(i), isLastKept ? '' : (blocks[i].sep || '\n\n'));
+		} else {
+			out.push(blocks[i].text, isLastKept ? '' : blocks[i].sep);
+		}
+	}
+	return { body: out.join(''), report };
 }
 
 export function printValidationErrors(filename, issues) {

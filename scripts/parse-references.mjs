@@ -69,7 +69,10 @@ function extractCommon(text) {
 	const doi = doiMatch ? doiMatch[1].replace(/[.,;]+$/, '') : undefined;
 	const pmidMatch = text.match(/PMID:?\s*(\d{6,9})/i);
 	const pmid = pmidMatch ? pmidMatch[1] : undefined;
-	const nctMatches = [...text.matchAll(/\bNCT\d{8}\b/g)].map((x) => x[0]);
+	// De-duplicated: one trial's NCT number often appears twice in a single
+	// entry (once as a label, once inside its clinicaltrials.gov URL), which
+	// is still one trial, not a bundle.
+	const nctMatches = [...new Set([...text.matchAll(/\bNCT\d{8}\b/g)].map((x) => x[0]))];
 	const consensusUrlMatch = text.match(/https:\/\/consensus\.app\/\S+/);
 	let url;
 	if (doi) url = `https://doi.org/${doi}`;
@@ -86,11 +89,34 @@ function parseVancouver(text) {
 	// would otherwise be mistaken for the pub year, truncating everything
 	// after it out of the title/journal split.
 	const yearMatch = beforeDoi.match(/\b((?:19|20)\d{2})[;,]/);
-	const head = yearMatch ? beforeDoi.slice(0, yearMatch.index) : beforeDoi;
+	let head = yearMatch ? beforeDoi.slice(0, yearMatch.index) : beforeDoi;
+	let year = yearMatch?.[1];
+	if (!year) {
+		// Preprints and online-first entries have no "YEAR;vol" anchor
+		// ("Published online 15 June 2026", "bioRxiv [preprint]. 2025.") —
+		// the last year-like number before the DOI is the posting year.
+		const years = [...beforeDoi.matchAll(/\b((?:19|20)\d{2})\b/g)];
+		year = years.length ? years[years.length - 1][1] : undefined;
+	}
+	// A title ending in "?" or "!" has no period to split on ("...gain-of-
+	// function? Am J Physiol Renal Physiol."), so give it one.
+	head = head.replace(/([?!])\s+(?=[A-Z])/g, '$1. ');
 	const parts = head.split(/\.\s+/).map((s) => s.trim()).filter(Boolean);
-	const [authors, title, journal] = parts;
-	const year = yearMatch?.[1];
-	const needsReview = !title || !url || !journal;
+	// Drop trailing date/status clauses that follow the journal name.
+	while (
+		parts.length > 3 &&
+		/^(?:(?:19|20)\d{2}\b.*|pmid\b.*|published online\b.*|preprint\b.*|\[preprint\b.*|epub\b.*|accessed\b.*|retrieved\b.*)$/i.test(
+			parts[parts.length - 1],
+		)
+	) {
+		parts.pop();
+	}
+	// Exactly authors / title / journal, or it isn't parsed — a title with an
+	// internal period ("vs. placebo") would otherwise be silently truncated and
+	// the journal taken from the wrong fragment.
+	const [authors, title, rawJournal] = parts;
+	const journal = rawJournal?.replace(/\s*\[[^\]]*\]\s*$/, '').replace(/\s*\[?preprint\]?\s*$/i, '').trim();
+	const needsReview = parts.length !== 3 || !title || !url || !journal;
 	return { kind: needsReview ? 'needs-review' : 'article', authors, title, journal, year, doi, pmid, url, text };
 }
 
@@ -115,7 +141,9 @@ function parseApa(text) {
 }
 
 function parseOne(entry) {
-	const text = entry.text.replace(/\*/g, '');
+	// Drop emphasis markers and undo pandoc's markdown escapes (\[ \] \. …),
+	// which are formatting artifacts, not part of the citation.
+	const text = entry.text.replace(/\*/g, '').replace(/\\([\\`_{}\[\]()#+\-.!|<>~])/g, '$1');
 	const { nctMatches } = extractCommon(text);
 	if (nctMatches.length > 1) return { kind: 'trial-bundle', text, nctNumbers: nctMatches };
 	if (nctMatches.length === 1 && /clinicaltrials\.gov/i.test(text)) {
@@ -123,7 +151,10 @@ function parseOne(entry) {
 		// name>. <NCT + other details>." — the trial name is the second
 		// segment, not the first (which is just the sponsor/source label).
 		const segments = text.split(/\.\s/);
-		return { kind: 'trial', title: segments[1] ?? segments[0], url: `https://clinicaltrials.gov/study/${nctMatches[0]}`, nct: nctMatches[0], text };
+		// Some entries lead the trial name with its own NCT number ("NCT0683…
+		// — An Open-Label Phase 2 Study…"); the number is already in the URL.
+		const title = (segments[1] ?? segments[0]).replace(/^NCT\d{8}\s*[—–-]\s*/, '').trim();
+		return { kind: 'trial', title, url: `https://clinicaltrials.gov/study/${nctMatches[0]}`, nct: nctMatches[0], text };
 	}
 	return entry.noExplicitMarker ? parseApa(text) : parseVancouver(text);
 }

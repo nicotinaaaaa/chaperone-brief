@@ -56,6 +56,26 @@ const MANIFEST = {
 		h1Text: ['Trained Immunity: How BCG Vaccination Reprograms Innate Immune Memory'],
 		h2Text: [],
 	},
+	'apol1-kidney-disease-review.md': {
+		deleteText: ['REVIEW · MOLECULAR NEPHROLOGY AND HUMAN GENETICS'],
+		h1Text: ['APOL1-Mediated Kidney Disease: A Trypanolytic Innate Immune Protein Turned Podocyte Toxin'],
+		h2Text: [],
+	},
+	// The printed "Contents" and "FIGURES AND TABLES" lists (with page numbers)
+	// are deleted as whole blocks beforehand — only their labels would be
+	// caught here, so they're not listed.
+	'beta-cell-dedifferentiation-t2d-review.md': {
+		deleteText: ['REVIEW ARTICLE · ISLET CELL BIOLOGY AND ENDOCRINOLOGY'],
+		h1Text: ['β-Cell Dedifferentiation and the Loss of Islet Cell Identity in Type 2 Diabetes'],
+		h2Text: ['Registry records', 'Source attribution'],
+	},
+	'somatic-cag-expansion-mmr-huntingtons-review.md': {
+		deleteText: ['REVIEW · NEUROGENETICS'],
+		h1Text: [
+			"The Repeat That Keeps Growing: Somatic CAG Expansion and DNA Mismatch Repair as the Engine of Huntington's Disease",
+		],
+		h2Text: [],
+	},
 };
 
 const inputPath = process.argv[2];
@@ -76,12 +96,19 @@ const BOLD_ONLY = /^\*\*([^*]+)\*\*$/;
 const PLAIN_NUMBERED = /^(\d+)\\?\.((?:\d+)?)\s+(.+)$/;
 const CAPTION_TRAP = /^(figure|table)\s+\d/i;
 
-const manifest = MANIFEST[path.basename(resolvedPath)] ?? { deleteText: [], h1Text: [], h2Text: [] };
+// Curly vs. straight quotes differ between Word exports; compare without them.
+const norm = (s) => s.replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"').trim();
+const rawManifest = MANIFEST[path.basename(resolvedPath)] ?? { deleteText: [], h1Text: [], h2Text: [] };
+const manifest = {
+	deleteText: rawManifest.deleteText.map(norm),
+	h1Text: rawManifest.h1Text.map(norm),
+	h2Text: rawManifest.h2Text.map(norm),
+};
 
 function classify(text) {
-	if (manifest.deleteText.includes(text)) return { action: 'delete', reason: 'manifest: kicker/vestigial label' };
-	if (manifest.h1Text.includes(text)) return { action: 'h1', reason: 'manifest: title paragraph' };
-	if (manifest.h2Text.includes(text)) return { action: 'h2', reason: 'manifest: trailing top-level section' };
+	if (manifest.deleteText.includes(norm(text))) return { action: 'delete', reason: 'manifest: kicker/vestigial label' };
+	if (manifest.h1Text.includes(norm(text))) return { action: 'h1', reason: 'manifest: title paragraph' };
+	if (manifest.h2Text.includes(norm(text))) return { action: 'h2', reason: 'manifest: trailing top-level section' };
 	if (/^abstract$/i.test(text)) return { action: 'h2', text: 'Abstract', reason: 'top-level section (normalized casing)' };
 	if (/^references$/i.test(text)) return { action: 'h2', text: 'References', reason: 'top-level section (normalized casing)' };
 	if (CAPTION_TRAP.test(text)) return { action: null, reason: 'caption trap — handled separately, not by this pass' };
@@ -131,7 +158,7 @@ for (let i = 0; i < lines.length; i++) {
 		style = 'plain';
 	}
 	if (text === null) continue;
-	if (pastReferences && style === 'plain' && !manifest.h2Text.includes(text)) continue;
+	if (pastReferences && style === 'plain' && !manifest.h2Text.includes(norm(text))) continue;
 
 	if (/^references$/i.test(text)) pastReferences = true;
 

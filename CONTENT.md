@@ -144,6 +144,15 @@ The bold-prefix form is authoritative. An italic-only paragraph in the same
 position is a fallback for content that doesn't follow this convention, but
 don't rely on it — always use the bold prefix.
 
+`new-review.mjs` enforces this at ingest rather than trusting the source: a
+caption written as a blockquote, plain text, fully bold or fully italic is
+rewritten to the bold-prefix form; a table caption sitting *above* its table
+is moved below it; and a title above plus a source note below are merged into
+one caption below. Raw-HTML tables (what a docx conversion emits for cells
+with several paragraphs) are captioned the same way. Every image without alt
+text gets it from the first sentence of its own caption — an image with no
+caption at all is flagged in the ingest output and left with empty alt text.
+
 ---
 
 ## Ingest scripts

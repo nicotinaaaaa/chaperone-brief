@@ -11,6 +11,7 @@ import {
 	deriveSummary,
 	wordCount,
 	stripLeadingHeading,
+	normalizeFiguresAndCaptions,
 	toDateOnly,
 	printValidationErrors,
 } from './lib/ingest-helpers.mjs';
@@ -115,12 +116,16 @@ if (headingResult.removed && !headingResult.removed.matchesTitle) {
 }
 const bodyAfterHeading = headingResult.removed ? headingResult.body : body;
 
+// Bring figure/table captions to the one shape the site's caption transform
+// recognises, and give every image alt text taken from its own caption.
+const normalized = normalizeFiguresAndCaptions(bodyAfterHeading);
+
 // Rewrite relative image paths to where they'll actually be served from, and
 // fail if the markdown references a figure that --figures didn't provide.
-let finalBody = bodyAfterHeading;
+let finalBody = normalized.body;
 if (resolvedFigures) {
 	const missing = [];
-	finalBody = bodyAfterHeading.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, src) => {
+	finalBody = normalized.body.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, src) => {
 		if (/^([a-z]+:)?\/\//i.test(src) || src.startsWith('/')) {
 			return match; // external or already absolute — leave untouched
 		}
@@ -194,6 +199,22 @@ if (headingResult.removed) {
 	);
 } else {
 	console.log('No leading heading found to remove.');
+}
+{
+	const r = normalized.report;
+	if (r.rewritten.length + r.merged.length + r.moved.length + r.alt.length > 0) {
+		console.log('Normalised figures and captions:');
+		if (r.rewritten.length) console.log(`  - ${r.rewritten.length} caption(s) rewritten to the bold-prefix form`);
+		if (r.merged.length) console.log(`  - ${r.merged.length} table caption(s) merged (title above + note below → one caption below)`);
+		if (r.moved.length) console.log(`  - ${r.moved.length} table caption(s) moved from above their table to below it`);
+		if (r.alt.length) console.log(`  - alt text set from the caption on ${r.alt.length} image(s)`);
+	}
+	if (r.missingAlt.length > 0) {
+		console.error(
+			`⚠ WARNING: ${r.missingAlt.length} image(s) have no caption to take alt text from, so their alt text is empty ` +
+				`(screen readers will skip them): ${r.missingAlt.join(', ')}`,
+		);
+	}
 }
 if (guesses.length > 0) {
 	console.log('Guessed:');

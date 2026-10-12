@@ -65,6 +65,13 @@ function textOf(node: HastNode | undefined | null): string {
 	return '';
 }
 
+// Tables with multi-paragraph cells come through the docx conversion as raw
+// HTML, which reaches this plugin as a single `raw` node rather than a parsed
+// <table> element — treat a complete <table>…</table> block as a table too.
+function isRawTable(node: HastNode): boolean {
+	return node.type === 'raw' && /^\s*<table[\s>][\s\S]*<\/table>\s*$/i.test(node.value ?? '');
+}
+
 function isImageOnlyParagraph(node: HastNode): HastNode | null {
 	if (!isElement(node, 'p') || !node.children) return null;
 	const meaningful = node.children.filter((c) => !(c.type === 'text' && (c.value ?? '').trim() === ''));
@@ -211,7 +218,7 @@ function transformChildren(nodes: HastNode[]): HastNode[] {
 	while (i < nodes.length) {
 		const node = nodes[i];
 		const image = isImageOnlyParagraph(node);
-		const isTable = isElement(node, 'table');
+		const isTable = isElement(node, 'table') || isRawTable(node);
 
 		if (image || isTable) {
 			// The caption paragraph is the next *significant* sibling — markdown-to-hast
