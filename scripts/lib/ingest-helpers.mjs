@@ -25,11 +25,22 @@ export function fail(message) {
 	process.exit(1);
 }
 
+// Greek letters carry real meaning in biology titles (β-cell, TNF-α, Aβ) and
+// would otherwise be dropped outright, leaving "cell-dedifferentiation…".
+const GREEK_LETTER_NAMES = {
+	α: 'alpha', β: 'beta', γ: 'gamma', δ: 'delta', ε: 'epsilon', ζ: 'zeta', η: 'eta', θ: 'theta',
+	ι: 'iota', κ: 'kappa', λ: 'lambda', μ: 'mu', ν: 'nu', ξ: 'xi', π: 'pi', ρ: 'rho', σ: 'sigma',
+	τ: 'tau', φ: 'phi', χ: 'chi', ψ: 'psi', ω: 'omega',
+};
+
 export function slugify(input) {
 	return input
 		.toLowerCase()
+		.replace(/[α-ω]/g, (c) => ` ${GREEK_LETTER_NAMES[c] ?? ''} `)
 		.normalize('NFKD')
 		.replace(/[̀-ͯ]/g, '')
+		// An apostrophe joins rather than splits: "Huntington's" → "huntingtons".
+		.replace(/['’‘`]/g, '')
 		.replace(/[^a-z0-9]+/g, '-')
 		.replace(/^-+|-+$/g, '')
 		.replace(/-{2,}/g, '-');
