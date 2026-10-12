@@ -146,7 +146,11 @@ const MONTH_PATTERN =
 // ("2026-09-06 to 2026-09-20"), month-first prose ("August 16–30, 2026" or
 // "July 27 – August 9, 2026"), or day-first prose ("roughly 6–20 September
 // 2026"). Returns { windowStart, windowEnd } (ISO date strings) or undefined.
-function matchDateRange(text) {
+function matchDateRange(rawText) {
+	// A hedge ("roughly October 4 – October 11, 2026") would otherwise defeat
+	// every start-anchored pattern below.
+	const text = rawText.replace(/^(?:roughly|about|approximately|around|circa|c\.|~)\s*/i, '');
+
 	const isoMatch = text.match(/^(\d{4}-\d{2}-\d{2})\s*(?:to|–|—|-)\s*(\d{4}-\d{2}-\d{2})/i);
 	if (isoMatch) {
 		return { windowStart: isoMatch[1], windowEnd: isoMatch[2] };
