@@ -86,6 +86,13 @@ const MANIFEST = {
 		tags: ['huntingtons-disease', 'somatic-repeat-expansion', 'mismatch-repair', 'MSH3'],
 		draft: false,
 	},
+	'neuron-glioma-synapse-review.md': {
+		summary:
+			'Glioma cells receive genuine synaptic input from neurons and turn it into proliferation and invasion, and the tumours in turn make the surrounding brain more active, closing a feed-forward loop. The review sets out how these synapses are built, the small early-phase trials testing whether interrupting them can treat glioma, and the preclinical finding that benzodiazepines accelerate the growth of H3K27M-altered diffuse midline glioma.',
+		subfield: 'neuroscience',
+		tags: ['cancer-neuroscience', 'glioblastoma', 'diffuse-midline-glioma', 'AMPA-receptor'],
+		draft: false,
+	},
 };
 
 // Optional filename arguments restrict the run to those manifest entries

@@ -76,6 +76,11 @@ const MANIFEST = {
 		],
 		h2Text: [],
 	},
+	'neuron-glioma-synapse-review.md': {
+		deleteText: [],
+		h1Text: ['The Malignant Synapse: Neuron-to-Glioma Synaptic Communication as a Driver of Brain Tumour Progression'],
+		h2Text: [],
+	},
 };
 
 const inputPath = process.argv[2];
