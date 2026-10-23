@@ -106,7 +106,13 @@ while IFS= read -r line; do
 	git add -- "${line:3}"
 done <<< "$CHANGED_FILES"
 COMMIT_SUBJECT="Publish $TYPE: $(basename "$INPUT")"
-if ! git commit -m "$COMMIT_SUBJECT"; then
+COMMIT_ARGS=(-m "$COMMIT_SUBJECT")
+# Optional trailer paragraph (e.g. a Co-Authored-By line) supplied by whoever
+# drives this script; the scheduled job leaves it unset, so its commits carry none.
+if [ -n "${PUBLISH_COMMIT_TRAILER:-}" ]; then
+	COMMIT_ARGS+=(-m "$PUBLISH_COMMIT_TRAILER")
+fi
+if ! git commit "${COMMIT_ARGS[@]}"; then
 	echo "✗ Commit failed." >&2
 	exit 5
 fi

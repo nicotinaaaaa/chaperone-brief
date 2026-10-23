@@ -241,6 +241,9 @@ scripts/publish.sh review inbox/some-review.md [--slug x] [--docx y] [--figures 
 ```
 
 `scripts/publish.sh` wraps the ingest step above with build → commit → push,
-and is what a scheduled task runs non-interactively — see
+and is what a scheduled task runs non-interactively. Set
+`PUBLISH_COMMIT_TRAILER` (e.g. a `Co-Authored-By:` line) to append it to the
+commit message as its own paragraph; unset, the commit has the subject line
+only. See
 [README.md's Deployment section](README.md#deployment) for exactly what it
 checks before running and how it fails.
