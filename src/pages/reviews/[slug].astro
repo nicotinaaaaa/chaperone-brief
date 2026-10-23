@@ -26,7 +26,7 @@ const dateFmt = new Intl.DateTimeFormat('en-US', { dateStyle: 'long' });
 ---
 
 <BaseLayout title={title} description={summary} type="article">
-	<div class:list={['lg:gap-10', hasToc && 'lg:grid lg:grid-cols-[200px_1fr]']}>
+	<div class:list={['lg:gap-10', hasToc && 'lg:grid lg:grid-cols-[200px_minmax(0,1fr)]']}>
 		{hasToc && <TableOfContents headings={headings} />}
 		<article data-toc-source>
 			{draft && <p class="draft-badge mb-4">Draft — not shown in production builds</p>}

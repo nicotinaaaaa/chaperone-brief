@@ -144,15 +144,18 @@ button:focus-visible,
 	font-size: 0.8em;
 }
 
-/* Wide tables scroll horizontally in their own box instead of breaking layout. */
+/* Cells wrap, so most tables fit the text column; one that still doesn't
+   (many columns) scrolls horizontally in its own box instead of breaking the
+   page layout. The min-width stops a column being squeezed to a few characters.
+   (Cells used to be white-space: nowrap, which made every table with sentence-
+   length cells several thousand pixels wide.) */
 .prose table {
 	display: block;
 	overflow-x: auto;
-	white-space: nowrap;
 }
 
 .prose table :where(td, th) {
-	white-space: nowrap;
+	min-width: 8rem;
 }
 
 /* Primary caption convention: a paragraph starting "**Figure 1.**" or
