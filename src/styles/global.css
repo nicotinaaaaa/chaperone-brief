@@ -136,6 +136,9 @@ button:focus-visible,
 
 .prose a {
 	text-underline-offset: 3px;
+	/* Reference lists contain raw URLs, which are long unbroken strings; let
+	   them wrap rather than push the page wider than a phone screen. */
+	overflow-wrap: anywhere;
 }
 
 /* External links get a screen-reader hint; see components that add rel/target. */
