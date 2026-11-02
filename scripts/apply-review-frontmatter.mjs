@@ -93,6 +93,20 @@ const MANIFEST = {
 		tags: ['cancer-neuroscience', 'glioblastoma', 'diffuse-midline-glioma', 'AMPA-receptor'],
 		draft: false,
 	},
+	'chip-cardiovascular-disease-review.md': {
+		summary:
+			'Blood stem cells acquire mutations with age, and carriers of clonal haematopoiesis (CHIP) have roughly twice the risk of coronary heart disease and stroke; mouse models trace this to hyperinflammatory mutant immune cells acting through gene-specific inflammasome pathways. The review follows the evidence from epidemiology to mechanism to therapy, and asks whether TET2 carriers benefit disproportionately from interleukin-1β blockade, a claim that rests on an exploratory CANTOS subgroup and has not yet been tested prospectively.',
+		subfield: 'cardiology',
+		tags: ['clonal-haematopoiesis', 'TET2', 'inflammasome', 'atherosclerosis'],
+		draft: false,
+	},
+	'preeclampsia-sflt1-plgf-axis-review.md': {
+		summary:
+			'Preeclampsia is now understood as a disease driven by placental overproduction of sFlt-1, a decoy receptor that binds up the growth factors VEGF and PlGF, and the sFlt-1/PlGF ratio already rules out short-term preeclampsia with a negative predictive value approaching 99–100%. The review follows that mechanism into clinical testing and the therapeutic pipeline, from aspirin and metformin to apheresis and placenta-targeted siRNA now in first-in-human testing, and sets out the open questions, including the safety of nucleic-acid drugs in pregnancy.',
+		subfield: 'obstetrics',
+		tags: ['preeclampsia', 'sFlt-1', 'PlGF', 'placenta'],
+		draft: false,
+	},
 };
 
 // Optional filename arguments restrict the run to those manifest entries

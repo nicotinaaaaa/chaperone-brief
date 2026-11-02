@@ -13,6 +13,12 @@
 // promote to H2). A future docx conversion with different kicker text would
 // need its own manifest entry — the numbered-heading promotion is the only
 // part of this that's genuinely generic.
+//
+// shiftHeadings: true is for docs whose Word file used real heading styles,
+// which pandoc emits as "# **1. Introduction**" / "## **1.1 …**" — bold
+// markers inside the heading, and one level too high for this site (the
+// title is the H1, sections are H2, subsections H3). It strips the bold and
+// moves each real heading down a level.
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -81,6 +87,20 @@ const MANIFEST = {
 		h1Text: ['The Malignant Synapse: Neuron-to-Glioma Synaptic Communication as a Driver of Brain Tumour Progression'],
 		h2Text: [],
 	},
+	'chip-cardiovascular-disease-review.md': {
+		deleteText: [],
+		h1Text: [
+			'Clonal Haematopoiesis of Indeterminate Potential as a Cardiovascular Risk Factor: Somatic Mutations, Inflammasome Biology and the Case for Mutation-Guided Anti-Inflammatory Therapy',
+		],
+		h2Text: [],
+		shiftHeadings: true,
+	},
+	'preeclampsia-sflt1-plgf-axis-review.md': {
+		deleteText: [],
+		h1Text: ['Syncytiotrophoblast Stress and the sFlt-1/PlGF Axis in Preeclampsia'],
+		h2Text: [],
+		shiftHeadings: true,
+	},
 };
 
 const inputPath = process.argv[2];
@@ -109,6 +129,10 @@ const manifest = {
 	h1Text: rawManifest.h1Text.map(norm),
 	h2Text: rawManifest.h2Text.map(norm),
 };
+const shiftHeadings = rawManifest.shiftHeadings === true;
+// Real headings pandoc already produced; only acted on when the manifest opts in.
+const REAL_HEADING = /^(#{1,5})\s+(.+?)\s*$/;
+const REAL_REFERENCES_HEADING = /^#{1,6}\s+(?:\*\*)?references(?:\*\*)?\s*$/i;
 
 function classify(text) {
 	if (manifest.deleteText.includes(norm(text))) return { action: 'delete', reason: 'manifest: kicker/vestigial label' };
@@ -139,6 +163,14 @@ let pastReferences = false;
 for (let i = 0; i < lines.length; i++) {
 	const trimmed = lines[i].trim();
 	if (trimmed === '') continue;
+
+	// A real "References" heading (shiftHeadings docs) ends the section-heading
+	// zone exactly as a bold one does: the plain "1. Author…" entries after it
+	// are citations, not numbered sections.
+	if (REAL_REFERENCES_HEADING.test(trimmed)) {
+		pastReferences = true;
+		continue;
+	}
 
 	// Only treat as a candidate if it's alone in its paragraph (blank line
 	// or document boundary on both sides) — this is what rules out a bold
@@ -183,6 +215,11 @@ if (!apply) {
 		if (c.context.after.length) console.log(`  after:  ${c.context.after.join(' / ').slice(0, 100)}`);
 		console.log('');
 	}
+	if (shiftHeadings) {
+		const real = lines.filter((l) => REAL_HEADING.test(l));
+		console.log(`${real.length} real heading(s) would be unbolded and moved down one level (manifest: shiftHeadings)`);
+		for (const l of real) console.log(`  ${l.slice(0, 100)}`);
+	}
 	process.exit(0);
 }
 
@@ -191,6 +228,18 @@ if (!apply) {
 // are collapsed in one pass at the end rather than computed per-deletion.
 let deleted = 0;
 let promoted = 0;
+let shifted = 0;
+if (shiftHeadings) {
+	// Before the promotions below, which write the title as a fresh H1 that
+	// must not be shifted along with the source's own headings.
+	for (let i = 0; i < lines.length; i++) {
+		const m = lines[i].match(REAL_HEADING);
+		if (!m) continue;
+		const text = m[2].replace(/^\*\*(.+)\*\*$/, '$1').trim();
+		lines[i] = `${m[1]}# ${text}`;
+		shifted++;
+	}
+}
 for (const c of candidates) {
 	if (!c.action) continue;
 	if (c.action === 'delete') {
@@ -209,4 +258,7 @@ const newBody = lines
 	.replace(/\n{3,}/g, '\n\n');
 
 fs.writeFileSync(resolvedPath, frontmatter + newBody);
-console.log(`✓ ${path.relative(process.cwd(), inputPath)}: ${promoted} heading(s) promoted, ${deleted} line(s) deleted`);
+console.log(
+	`✓ ${path.relative(process.cwd(), inputPath)}: ${promoted} heading(s) promoted, ${deleted} line(s) deleted` +
+		(shifted ? `, ${shifted} real heading(s) unbolded and moved down a level` : ''),
+);
