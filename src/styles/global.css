@@ -122,6 +122,9 @@ button:focus-visible,
 	font-size: 18px;
 	line-height: 1.7;
 	max-width: 68ch;
+	/* A long unbroken token (a DOI in a reference list, say) wraps rather than
+	   pushing the page wider than the screen. */
+	overflow-wrap: break-word;
 }
 
 @media (min-width: 640px) {
