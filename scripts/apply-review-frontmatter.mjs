@@ -148,6 +148,16 @@ for (const [filename, config] of Object.entries(MANIFEST)) {
 			totalDropped++;
 			continue;
 		}
+		// A reference the parser could not split into authors / title / journal
+		// carries whatever fragments it found ("Late vs" / "early preeclampsia"),
+		// which would be written as if they were real values. Refuse, rather than
+		// guess: it needs a sourceOverrides entry with the true title.
+		if (r.kind === 'needs-review' && !config.sourceOverrides?.[r.num]?.title) {
+			console.error(
+				`✗ ${filename}: reference [${r.num}] could not be parsed reliably and has no sourceOverrides entry with a title:\n  ${r.text.slice(0, 220)}`,
+			);
+			process.exit(1);
+		}
 		const overridden = { ...r, ...(config.sourceOverrides?.[r.num] ?? {}) };
 		sources.push(buildSource(overridden));
 		totalKept++;

@@ -101,7 +101,14 @@ function parseVancouver(text) {
 	// A title ending in "?" or "!" has no period to split on ("...gain-of-
 	// function? Am J Physiol Renal Physiol."), so give it one.
 	head = head.replace(/([?!])\s+(?=[A-Z])/g, '$1. ');
-	const parts = head.split(/\.\s+/).map((s) => s.trim()).filter(Boolean);
+	// "vs." inside a title is not a sentence end ("Late vs. early preeclampsia"):
+	// hide its period from the split, then put it back. ("et al." is deliberately
+	// not protected — it ends the author list, which IS the authors/title boundary.)
+	head = head.replace(/\b(vs)\.(\s+)/gi, '$1\u0001$2');
+	const parts = head
+		.split(/\.\s+/)
+		.map((s) => s.replace(/\u0001/g, '.').trim())
+		.filter(Boolean);
 	// Drop trailing date/status clauses that follow the journal name.
 	while (
 		parts.length > 3 &&
