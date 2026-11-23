@@ -147,10 +147,20 @@ function parseApa(text) {
 	return { kind: needsReview ? 'needs-review' : 'article', authors, title, journal, year, doi, pmid, url, text };
 }
 
+// A DOI written as a link, "[doi:10.1038/x](https://doi.org/10.1038/x)", would
+// otherwise have its closing "](https://…)" swallowed into the DOI (the DOI
+// pattern runs to the next whitespace) and written out as a broken URL. Flatten
+// each link to "label url"; one level of parentheses is allowed inside the URL
+// (Lancet DOIs contain them).
+const MD_LINK = /(?<!\\)\[([^\]]*)\]\(((?:[^()\s]|\([^()\s]*\))+)\)/g;
+
 function parseOne(entry) {
 	// Drop emphasis markers and undo pandoc's markdown escapes (\[ \] \. …),
 	// which are formatting artifacts, not part of the citation.
-	const text = entry.text.replace(/\*/g, '').replace(/\\([\\`_{}\[\]()#+\-.!|<>~])/g, '$1');
+	const text = entry.text
+		.replace(MD_LINK, '$1 $2')
+		.replace(/\*/g, '')
+		.replace(/\\([\\`_{}\[\]()#+\-.!|<>~])/g, '$1');
 	const { nctMatches } = extractCommon(text);
 	if (nctMatches.length > 1) return { kind: 'trial-bundle', text, nctNumbers: nctMatches };
 	if (nctMatches.length === 1 && /clinicaltrials\.gov/i.test(text)) {
