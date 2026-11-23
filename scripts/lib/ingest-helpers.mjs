@@ -490,7 +490,7 @@ export function normalizeFiguresAndCaptions(body) {
 		}
 	}
 
-	const report = { rewritten: [], moved: [], merged: [], alt: [], missingAlt: [], repairedRows: [] };
+	const report = { rewritten: [], moved: [], merged: [], alt: [], missingAlt: [], repairedRows: [], pairedByStyle: [] };
 	for (const block of blocks) {
 		const { text, repaired } = repairWrappedRows(block.text);
 		if (repaired.length > 0) {
@@ -501,6 +501,21 @@ export function normalizeFiguresAndCaptions(body) {
 	const consumed = new Set();
 	const dropped = new Set();
 	const appendAfter = new Map();
+
+	// Back-to-back tables are ambiguous: the caption between table 1 and table 2
+	// could close the first or open the second. Decide by the document's own
+	// style, counted from the tables that have a caption on one side only.
+	const tableCaptionAt = (idx) => idx >= 0 && idx < blocks.length && parseCaption(blocks[idx].text)?.kind === 'Table';
+	let aboveOnly = 0;
+	let belowOnly = 0;
+	blocks.forEach((b, idx) => {
+		if (!isTableBlock(b.text)) return;
+		const hasBefore = tableCaptionAt(idx - 1);
+		const hasAfter = tableCaptionAt(idx + 1);
+		if (hasBefore && !hasAfter) aboveOnly++;
+		else if (hasAfter && !hasBefore) belowOnly++;
+	});
+	const captionsAbove = aboveOnly > belowOnly;
 
 	for (let i = 0; i < blocks.length; i++) {
 		const text = blocks[i].text;
@@ -540,8 +555,19 @@ export function normalizeFiguresAndCaptions(body) {
 			const beforeIdx = i - 1;
 			const after = afterIdx < blocks.length && !consumed.has(afterIdx) ? parseCaption(blocks[afterIdx].text) : null;
 			const before = beforeIdx >= 0 && !consumed.has(beforeIdx) ? parseCaption(blocks[beforeIdx].text) : null;
-			const afterOk = after && after.kind === 'Table' ? after : null;
-			const beforeOk = before && before.kind === 'Table' && (!afterOk || afterOk.n === before.n) ? before : null;
+			let afterOk = after && after.kind === 'Table' ? after : null;
+			let beforeOk = before && before.kind === 'Table' ? before : null;
+			if (afterOk && beforeOk && afterOk.n !== beforeOk.n) {
+				// Two different captions either side: one of them belongs to a
+				// neighbouring table. A document that puts captions above its tables
+				// owns the one above; otherwise the one below.
+				if (captionsAbove) {
+					afterOk = null;
+					report.pairedByStyle.push({ label: `Table ${beforeOk.n}` });
+				} else {
+					beforeOk = null;
+				}
+			}
 
 			if (afterOk && beforeOk) {
 				// A title above the table and a note/source below it: one caption.

@@ -208,6 +208,7 @@ if (headingResult.removed) {
 		if (r.rewritten.length) console.log(`  - ${r.rewritten.length} caption(s) rewritten to the bold-prefix form`);
 		if (r.merged.length) console.log(`  - ${r.merged.length} table caption(s) merged (title above + note below → one caption below)`);
 		if (r.moved.length) console.log(`  - ${r.moved.length} table caption(s) moved from above their table to below it`);
+		if (r.pairedByStyle.length) console.log(`  - ${r.pairedByStyle.length} caption(s) sitting between two back-to-back tables given to the table below (this document puts captions above its tables)`);
 		if (r.alt.length) console.log(`  - alt text set from the caption on ${r.alt.length} image(s)`);
 	}
 	if (r.missingAlt.length > 0) {
