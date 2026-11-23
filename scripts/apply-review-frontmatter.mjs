@@ -107,6 +107,27 @@ const MANIFEST = {
 		tags: ['preeclampsia', 'sFlt-1', 'PlGF', 'placenta'],
 		draft: false,
 	},
+	'cerebral-malaria-pfemp1-epcr-review.md': {
+		summary:
+			"Malaria parasites of the PfEMP1 family that carry CIDRα1 domains bind the endothelial protein C receptor (EPCR) on brain blood vessels, which both anchors infected red cells and sabotages the endothelium’s protective protein C pathway; these variants dominate in children with severe malaria and rise with severity. The review follows the evidence from adhesion to brain swelling and concludes that blocking the axis works best before coma develops, through vaccination or prophylaxis, while rescue therapy must act on injury that is still poorly mapped.",
+		subfield: 'parasitology',
+		tags: ['cerebral-malaria', 'PfEMP1', 'EPCR', 'Plasmodium-falciparum'],
+		draft: false,
+	},
+	'ecdna-oncogene-amplification-review.md': {
+		summary:
+			'Extrachromosomal DNA (ecDNA), circular centromere-free DNA that carries oncogenes, was detected in 17.1% of tumours in a 100,000 Genomes Project analysis and goes with higher stage, metastasis and shorter survival, because random inheritance lets a tumour tune oncogene dosage within a few cell generations. The review covers how ecDNA forms, is regulated and persists, and the first ecDNA-directed therapies, including two first-in-human trials that have been terminated.',
+		subfield: 'oncology',
+		tags: ['ecDNA', 'oncogene-amplification', 'tumour-heterogeneity', 'CHK1'],
+		draft: false,
+	},
+	'attr-amyloidosis-crispr-review.md': {
+		summary:
+			"Transthyretin amyloidosis has gone from untreatable to four distinct therapeutic strategies in about two decades: tetramer stabilisers, RNA knockdown, one-time CRISPR editing of the TTR gene (about 90% sustained serum TTR reduction) and antibodies that clear deposits. The review traces that arc and the problem now facing the field, that eplontersen’s 2026 phase 3 CARDIO-TTRansform trial missed its clinical primary endpoint although a cardiac MRI substudy showed substantial amyloid regression.",
+		subfield: 'cardiology',
+		tags: ['transthyretin-amyloidosis', 'CRISPR-Cas9', 'protein-misfolding', 'cardiac-amyloidosis'],
+		draft: false,
+	},
 };
 
 // Optional filename arguments restrict the run to those manifest entries

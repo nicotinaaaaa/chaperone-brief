@@ -101,6 +101,26 @@ const MANIFEST = {
 		h2Text: [],
 		shiftHeadings: true,
 	},
+	'cerebral-malaria-pfemp1-epcr-review.md': {
+		deleteText: [],
+		h1Text: ['Binding where it hurts: PfEMP1–EPCR engagement and the pathogenesis of cerebral malaria'],
+		h2Text: [],
+		shiftHeadings: true,
+	},
+	'ecdna-oncogene-amplification-review.md': {
+		deleteText: [],
+		h1Text: [
+			"Cancer's Circular Genome: Extrachromosomal DNA as a Driver of Oncogene Amplification, Tumour Heterogeneity and Therapy Resistance",
+		],
+		h2Text: [],
+		shiftHeadings: true,
+	},
+	'attr-amyloidosis-crispr-review.md': {
+		deleteText: [],
+		h1Text: ['Cutting the Supply, Clearing the Deposit: Transthyretin Amyloidosis from Tetramer Kinetics to In Vivo CRISPR Gene Editing'],
+		h2Text: [],
+		shiftHeadings: true,
+	},
 };
 
 const inputPath = process.argv[2];
