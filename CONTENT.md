@@ -145,7 +145,8 @@ position is a fallback for content that doesn't follow this convention, but
 don't rely on it — always use the bold prefix.
 
 `new-review.mjs` enforces this at ingest rather than trusting the source: a
-caption written as a blockquote, plain text, fully bold or fully italic is
+caption written as a blockquote, plain text, fully bold, fully italic, or bold
+only through a title sentence (`**Figure 1. Title.** Description`) is
 rewritten to the bold-prefix form; a table caption sitting *above* its table
 is moved below it; and a title above plus a source note below are merged into
 one caption below. Raw-HTML tables (what a docx conversion emits for cells
@@ -208,7 +209,10 @@ Installs [pandoc](https://pandoc.org) user-space to `~/.local` if it isn't
 already on `PATH` (no sudo), then converts to markdown and writes a **draft
 stub**, not a publishable file:
 
-- `title` — from the first `#` heading if the source has one; otherwise a
+- `title` — from the document's Word "Title"-style paragraph if it has one
+  (pandoc treats that as metadata and would drop it, so it is also written
+  into the body as a bold first line); otherwise from the first `#` heading,
+  unless that is only a section name such as "Abstract"; otherwise a
   `TODO —` placeholder built from the filename, since guessing a title from
   body text (bold pseudo-headings, category labels, etc.) is exactly the
   kind of thing that can be confidently wrong rather than absent.

@@ -158,6 +158,26 @@ if (conversion.status !== 0) {
 const pandocWarnings = conversion.stderr.trim();
 let markdown = conversion.stdout;
 
+// --- Word "Title" style. pandoc treats a Title-styled paragraph as document
+// metadata rather than body text, so the conversion above silently drops it:
+// the review is left with no title at all, and its first heading ("Abstract")
+// gets mistaken for one. Read it back with a one-line template and put it first
+// as a bold paragraph — the shape the other reviews' title lines already have,
+// and the one promote-headings.mjs turns into the H1.
+function readWordTitle() {
+	const templatePath = path.join(os.tmpdir(), `docx-title-${process.pid}.tpl`);
+	fs.writeFileSync(templatePath, '$title$');
+	const result = spawnSync(
+		pandocPath,
+		[resolvedInput, '-f', 'docx', '-t', 'plain', '--wrap=none', `--template=${templatePath}`, '-o', '-'],
+		{ encoding: 'utf-8' },
+	);
+	fs.rmSync(templatePath, { force: true });
+	return result.status === 0 ? result.stdout.replace(/\s+/g, ' ').trim() : '';
+}
+const wordTitle = readWordTitle();
+if (wordTitle) markdown = `**${wordTitle}**\n\n${markdown}`;
+
 // --- Normalise image references: pandoc emits plain markdown ![]() for
 // unsized images, but falls back to raw HTML <img> (no alt text, inline
 // width/height) for anything Word gave explicit dimensions. new-review.mjs's
@@ -191,10 +211,16 @@ markdown = markdown.replace(IMAGE_PATTERN, (match, mdAlt, mdSrc, htmlSrc) => {
 fs.rmSync(tempExtractDir, { recursive: true, force: true });
 
 // --- Derive what we safely can; TODO-stub the rest ---
-const derivedTitle = deriveTitleFromH1(markdown);
+// A first heading that is just a section name ("Abstract") is not a title.
+const SECTION_NAME = /^(?:\*\*)?\s*(abstract|summary|introduction|contents|references)\b/i;
+const headingTitle = deriveTitleFromH1(markdown);
+const titleFromHeading = headingTitle && !SECTION_NAME.test(headingTitle) ? headingTitle : null;
+const derivedTitle = wordTitle || titleFromHeading;
 const titleNote = derivedTitle
 	? null
-	: 'no "# " heading found in the converted document — the source likely uses bold-styled pseudo-headings rather than real Word heading styles, so the title could not be read from a heading the way it is for briefs';
+	: headingTitle
+		? `the first heading is "${headingTitle}", a section name rather than a title, and the source has no Word "Title" paragraph — set the title by hand`
+		: 'no "# " heading found in the converted document — the source likely uses bold-styled pseudo-headings rather than real Word heading styles, so the title could not be read from a heading the way it is for briefs';
 const fallbackTitle = path.basename(resolvedInput, path.extname(resolvedInput)).replace(/[_-]+/g, ' ').trim();
 const title = derivedTitle ?? `TODO — ${fallbackTitle}`;
 
@@ -238,7 +264,7 @@ if (imagesExtracted.length > 0) {
 console.log('\nDerived automatically:');
 console.log(`  - date ← file modified time: ${date}`);
 if (derivedTitle) {
-	console.log(`  - title ← first "# " heading: "${derivedTitle}"`);
+	console.log(`  - title ← ${wordTitle ? 'Word "Title" paragraph (also written first in the body)' : 'first "# " heading'}: "${derivedTitle}"`);
 } else {
 	console.log(`  - title: could not derive — stubbed as "${title}" (${titleNote})`);
 }

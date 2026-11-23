@@ -372,6 +372,14 @@ function parseCaption(raw) {
 		.join(' ')
 		.replace(/\s+/g, ' ')
 		.trim();
+	// **Figure 1. Title.** Description — the bold run covers the label AND a
+	// title sentence, and the description follows in plain text. The title
+	// becomes the caption's first sentence (and so the image's alt text).
+	const titled = t.match(/^\*\*(Figure|Table)\s+(\d+)\.\s+([^*]+?)\*\*\s+(\S.*)$/s);
+	if (titled) {
+		const title = endsSentence(titled[3]) ? titled[3].trim() : `${titled[3].trim()}.`;
+		return { kind: titled[1], n: titled[2], body: `${title} ${titled[4].trim()}` };
+	}
 	const m =
 		t.match(/^\*\*(Figure|Table)\s+(\d+)\.\*\*\s*(.*)$/s) || // **Figure 1.** body
 		t.match(/^\*\*(Figure|Table)\s+(\d+)\.\s+(.*?)\*\*$/s) || // **Figure 1. body**
